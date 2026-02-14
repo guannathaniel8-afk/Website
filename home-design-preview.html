@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home.html Design Preview - Staff1.html Ordering System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="root.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0a0e27, #1a1f3a);
+            color: white;
+            font-family: "Poppins", sans-serif;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: var(--color-light-blue);
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #bcd9ff;
+            margin-bottom: 40px;
+        }
+
+        .preview-section {
+            background: linear-gradient(var(--bg-darker), var(--bg-dark)) padding-box,
+                        linear-gradient(140deg, var(--color-light-blue), #ff00a2) border-box;
+            background-clip: padding-box, border-box;
+            border: 5px solid transparent;
+            border-radius: 18px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .preview-section h2 {
+            color: white;
+            font-size: 22px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .preview-section h2 i {
+            color: var(--color-light-blue);
+        }
+
+        /* Search & Filter Demo */
+        .search-demo {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--color-light-blue);
+            pointer-events: none;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            background: rgba(var(--color-white-rgb), 0.05);
+            border: 2px solid rgba(var(--color-light-blue-rgb), 0.2);
+            border-radius: 10px;
+            color: white;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--color-light-blue);
+            background: rgba(var(--color-light-blue-rgb), 0.05);
+            box-shadow: 0 0 15px rgba(var(--color-light-blue-rgb), 0.2);
+        }
+
+        .status-filter {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .status-filter select {
+            padding: 10px 15px;
+            background: rgba(var(--color-white-rgb), 0.05);
+            border: 2px solid rgba(var(--color-light-blue-rgb), 0.2);
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* Tabs Demo */
+        .tabs-demo {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: rgba(var(--color-white-rgb), 0.05);
+            border: 2px solid rgba(var(--color-light-blue-rgb), 0.2);
+            color: #bcd9ff;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover {
+            background: rgba(var(--color-light-blue-rgb), 0.1);
+            border-color: var(--color-light-blue);
+            color: var(--color-light-blue);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(90deg, var(--color-light-blue), #00a8e8);
+            border-color: transparent;
+            color: white;
+            box-shadow: 0 4px 15px rgba(var(--color-light-blue-rgb), 0.3);
+        }
+
+        /* Buttons Demo */
+        .buttons-demo {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, var(--color-light-blue), #00a8e8);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(var(--color-light-blue-rgb), 0.3);
+        }
+
+        .btn-approve {
+            background: linear-gradient(90deg, #10b981, #34d399);
+            color: white;
+        }
+
+        .btn-approve:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-reject {
+            background: linear-gradient(90deg, #ef4444, #f43f5e);
+            color: white;
+        }
+
+        .btn-reject:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        /* Status Cards */
+        .status-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .status-card {
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid;
+            text-align: center;
+        }
+
+        .status-success {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        .status-warning {
+            border-color: #f59e0b;
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+        }
+
+        .status-error {
+            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        .status-card i {
+            font-size: 24px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .status-card p {
+            margin: 0;
+            font-weight: 600;
+        }
+
+        /* Color Palette Preview */
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .color-box {
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 2px solid rgba(var(--color-light-blue-rgb), 0.3);
+        }
+
+        .color-swatch {
+            width: 100%;
+            height: 60px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .color-name {
+            color: var(--color-light-blue);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .color-code {
+            font-size: 12px;
+            color: #8899aa;
+            font-family: monospace;
+            margin-top: 5px;
+        }
+
+        /* Table Demo */
+        .table-demo {
+            overflow-x: auto;
+        }
+
+        .table-demo table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table-demo thead {
+            background: rgba(var(--color-light-blue-rgb), 0.1);
+        }
+
+        .table-demo th {
+            padding: 12px;
+            text-align: left;
+            color: var(--color-light-blue);
+            font-weight: 600;
+            border-bottom: 2px solid rgba(var(--color-light-blue-rgb), 0.2);
+        }
+
+        .table-demo td {
+            padding: 12px;
+            color: #bcd9ff;
+            border-bottom: 1px solid rgba(var(--color-white-rgb), 0.05);
+        }
+
+        .table-demo tbody tr:hover {
+            background: rgba(var(--color-light-blue-rgb), 0.05);
+        }
+
+        .features-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .features-list li {
+            padding: 8px 0;
+            color: #bcd9ff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .features-list i {
+            color: var(--color-light-blue);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid rgba(var(--color-light-blue-rgb), 0.1);
+            color: #8899aa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Home.html Design Preview</h1>
+        <p class="subtitle">Redesigned with Staff1.html Ordering System Styling</p>
+
+        <!-- Color Palette -->
+        <div class="preview-section">
+            <h2><i class="fas fa-palette"></i> New Color Palette</h2>
+            <div class="color-grid">
+                <div class="color-box">
+                    <div class="color-swatch" style="background: var(--color-light-blue);"></div>
+                    <div class="color-name">Light Blue</div>
+                    <div class="color-code">#7FD3FF</div>
+                </div>
+                <div class="color-box">
+                    <div class="color-swatch" style="background: var(--bg-darker);"></div>
+                    <div class="color-name">Dark Background</div>
+                    <div class="color-code">--bg-darker</div>
+                </div>
+                <div class="color-box">
+                    <div class="color-swatch" style="background: var(--bg-dark);"></div>
+                    <div class="color-name">Dark Blue</div>
+                    <div class="color-code">#002F6C</div>
+                </div>
+                <div class="color-box">
+                    <div class="color-swatch" style="background: #10b981;"></div>
+                    <div class="color-name">Success</div>
+                    <div class="color-code">#10B981</div>
+                </div>
+                <div class="color-box">
+                    <div class="color-swatch" style="background: #f59e0b;"></div>
+                    <div class="color-name">Warning</div>
+                    <div class="color-code">#F59E0B</div>
+                </div>
+                <div class="color-box">
+                    <div class="color-swatch" style="background: #ef4444;"></div>
+                    <div class="color-name">Error</div>
+                    <div class="color-code">#EF4444</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search & Filter -->
+        <div class="preview-section">
+            <h2><i class="fas fa-search"></i> Search & Filter Section</h2>
+            <div class="search-demo">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search by name, ID, or contact..." />
+                </div>
+                <div class="status-filter">
+                    <label>Filter by Status:</label>
+                    <select>
+                        <option>All Status</option>
+                        <option>Active</option>
+                        <option>Pending</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs & Navigation -->
+        <div class="preview-section">
+            <h2><i class="fas fa-layer-group"></i> Tab Navigation</h2>
+            <div class="tabs-demo">
+                <button class="tab-btn active"><i class="fas fa-list"></i> All Items</button>
+                <button class="tab-btn"><i class="fas fa-check"></i> Approved</button>
+                <button class="tab-btn"><i class="fas fa-times"></i> Rejected</button>
+                <button class="tab-btn"><i class="fas fa-history"></i> History</button>
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="preview-section">
+            <h2><i class="fas fa-hand-pointer"></i> Button Styles</h2>
+            <div class="buttons-demo">
+                <button class="btn btn-primary"><i class="fas fa-plus"></i> Primary Action</button>
+                <button class="btn btn-approve"><i class="fas fa-check"></i> Approve</button>
+                <button class="btn btn-reject"><i class="fas fa-times"></i> Reject</button>
+            </div>
+        </div>
+
+        <!-- Status Cards -->
+        <div class="preview-section">
+            <h2><i class="fas fa-inbox"></i> Status Cards</h2>
+            <div class="status-cards">
+                <div class="status-card status-success">
+                    <i class="fas fa-check-circle"></i>
+                    <p>In Stock</p>
+                    <small>45 Items</small>
+                </div>
+                <div class="status-card status-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>Low Stock</p>
+                    <small>12 Items</small>
+                </div>
+                <div class="status-card status-error">
+                    <i class="fas fa-times-circle"></i>
+                    <p>Out of Stock</p>
+                    <small>3 Items</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table Demo -->
+        <div class="preview-section">
+            <h2><i class="fas fa-table"></i> Table Design</h2>
+            <div class="table-demo">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Customer ID</th>
+                            <th>Name</th>
+                            <th>Contact</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#C001</td>
+                            <td>John Doe</td>
+                            <td>+63 9XX XXXX</td>
+                            <td><span class="status-card status-success" style="padding: 4px 12px; display: inline-block;">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td>#C002</td>
+                            <td>Jane Smith</td>
+                            <td>+63 9XX XXXX</td>
+                            <td><span class="status-card status-warning" style="padding: 4px 12px; display: inline-block;">Pending</span></td>
+                        </tr>
+                        <tr>
+                            <td>#C003</td>
+                            <td>Bob Wilson</td>
+                            <td>+63 9XX XXXX</td>
+                            <td><span class="status-card status-error" style="padding: 4px 12px; display: inline-block;">Inactive</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Design Features -->
+        <div class="preview-section">
+            <h2><i class="fas fa-star"></i> Design Features</h2>
+            <ul class="features-list">
+                <li><i class="fas fa-check"></i> 164 color replacements with CSS variables</li>
+                <li><i class="fas fa-check"></i> Modern search bars with icons inside inputs</li>
+                <li><i class="fas fa-check"></i> Tab navigation with active state highlighting</li>
+                <li><i class="fas fa-check"></i> Gradient buttons with hover effects</li>
+                <li><i class="fas fa-check"></i> Color-coded status indicators</li>
+                <li><i class="fas fa-check"></i> Light blue table headers</li>
+                <li><i class="fas fa-check"></i> Smooth animations and transitions</li>
+                <li><i class="fas fa-check"></i> Responsive mobile design</li>
+                <li><i class="fas fa-check"></i> Dark gradient backgrounds</li>
+                <li><i class="fas fa-check"></i> Consistent styling across all sections</li>
+            </ul>
+        </div>
+
+        <footer>
+            <p>✨ Home.html has been completely redesigned to match the Staff1.html ordering system.</p>
+            <p>All sections now feature consistent, modern styling with the new color palette.</p>
+        </footer>
+    </div>
+</body>
+</html>

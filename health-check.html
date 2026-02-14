@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Padua Hardware - System Health Check</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .check-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            border-left: 4px solid #ccc;
+            gap: 15px;
+        }
+        
+        .check-item.success {
+            background: #f0fdf4;
+            border-left-color: #10b981;
+        }
+        
+        .check-item.error {
+            background: #fef2f2;
+            border-left-color: #ef4444;
+        }
+        
+        .check-item.loading {
+            background: #fffbeb;
+            border-left-color: #f59e0b;
+        }
+        
+        .icon {
+            font-size: 24px;
+            min-width: 30px;
+        }
+        
+        .check-content {
+            flex: 1;
+        }
+        
+        .check-content label {
+            font-weight: 600;
+            color: #333;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .check-content .detail {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .check-content .detail.success {
+            color: #10b981;
+        }
+        
+        .check-content .detail.error {
+            color: #ef4444;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+        
+        .status-badge.success {
+            background: #10b98122;
+            color: #10b981;
+        }
+        
+        .status-badge.error {
+            background: #ef444422;
+            color: #ef4444;
+        }
+        
+        .status-badge.loading {
+            background: #f59e0b22;
+            color: #f59e0b;
+        }
+        
+        .section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+        
+        .section h2 {
+            color: #667eea;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        
+        button:hover {
+            opacity: 0.9;
+        }
+        
+        .code {
+            background: #f5f5f5;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 12px;
+            color: #333;
+            margin-top: 10px;
+            overflow-x: auto;
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏥 System Health Check</h1>
+        <p class="subtitle">Checking Padua Hardware CRM Backend Configuration</p>
+        
+        <div id="checks"></div>
+        
+        <div class="section">
+            <h2>✨ Next Steps</h2>
+            <p style="margin-bottom: 10px;">Once all checks pass:</p>
+            <ol style="margin-left: 20px; color: #666; line-height: 1.8;">
+                <li>Open <strong>Staff1.html</strong> in your browser</li>
+                <li>Press <strong>F12</strong> to open Console</li>
+                <li>Click <strong>"Add New Customer"</strong> button</li>
+                <li>Fill in the form and submit</li>
+                <li>Verify customer appears in table</li>
+                <li>Test <strong>"Create New Order"</strong> similarly</li>
+            </ol>
+        </div>
+        
+        <button onclick="location.href='Staff1.html'">📊 Go to Staff Dashboard</button>
+    </div>
+    
+    <script>
+        const API_BASE_URL = 'http://localhost/Offline/api';
+        const checks = [
+            {
+                name: 'API Server Connection',
+                check: () => testAPI()
+            },
+            {
+                name: 'Customers API Endpoint',
+                check: () => testEndpoint('customers.php?action=all', 'customers')
+            },
+            {
+                name: 'Orders API Endpoint',
+                check: () => testEndpoint('orders.php?action=all', 'orders')
+            },
+            {
+                name: 'Products API Endpoint',
+                check: () => testEndpoint('products.php?action=all', 'products')
+            },
+            {
+                name: 'Database Connection',
+                check: () => testDatabaseConnection()
+            },
+            {
+                name: 'Sample Data (Customers)',
+                check: () => testSampleData('customers.php?action=all', 'customers', 4)
+            },
+            {
+                name: 'Sample Data (Orders)',
+                check: () => testSampleData('orders.php?action=all', 'orders', 5)
+            },
+            {
+                name: 'Sample Data (Products)',
+                check: () => testSampleData('products.php?action=all', 'products', 8)
+            }
+        ];
+        
+        async function testAPI() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/customers.php?action=all`);
+                if (response.ok) {
+                    return { success: true, message: 'API server is responding' };
+                } else {
+                    return { success: false, message: `Server returned ${response.status}` };
+                }
+            } catch (error) {
+                return { success: false, message: 'Cannot connect to API server. Is Apache running?' };
+            }
+        }
+        
+        async function testEndpoint(endpoint, key) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/${endpoint}`);
+                const data = await response.json();
+                
+                if (response.ok && data[key]) {
+                    return { success: true, message: `Endpoint is working (${data[key].length} records)` };
+                } else {
+                    return { success: false, message: data.error || 'Invalid response format' };
+                }
+            } catch (error) {
+                return { success: false, message: error.message };
+            }
+        }
+        
+        async function testDatabaseConnection() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/customers.php?action=all`);
+                const data = await response.json();
+                
+                if (data.error && data.error.includes('Database')) {
+                    return { success: false, message: data.error };
+                } else if (data.customers) {
+                    return { success: true, message: 'Database is connected' };
+                } else {
+                    return { success: false, message: 'Unknown database error' };
+                }
+            } catch (error) {
+                return { success: false, message: 'Cannot connect to database API' };
+            }
+        }
+        
+        async function testSampleData(endpoint, key, expectedCount) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/${endpoint}`);
+                const data = await response.json();
+                
+                if (!data[key]) {
+                    return { success: false, message: 'No data found' };
+                }
+                
+                const actualCount = data[key].length;
+                if (actualCount >= expectedCount) {
+                    return { success: true, message: `${actualCount} records found` };
+                } else {
+                    return { success: false, message: `Only ${actualCount} records (expected ${expectedCount})` };
+                }
+            } catch (error) {
+                return { success: false, message: error.message };
+            }
+        }
+        
+        async function runChecks() {
+            const container = document.getElementById('checks');
+            container.innerHTML = '';
+            
+            for (const check of checks) {
+                const item = document.createElement('div');
+                item.className = 'check-item loading';
+                item.innerHTML = `
+                    <div class="icon"><div class="spinner"></div></div>
+                    <div class="check-content">
+                        <label>${check.name}</label>
+                        <div class="detail">Testing...</div>
+                    </div>
+                `;
+                container.appendChild(item);
+                
+                try {
+                    const result = await check.check();
+                    
+                    item.className = `check-item ${result.success ? 'success' : 'error'}`;
+                    const icon = result.success ? '✓' : '✗';
+                    item.innerHTML = `
+                        <div class="icon" style="color: ${result.success ? '#10b981' : '#ef4444'}">${icon}</div>
+                        <div class="check-content">
+                            <label>${check.name}</label>
+                            <div class="detail ${result.success ? 'success' : 'error'}">${result.message}</div>
+                            <span class="status-badge ${result.success ? 'success' : 'error'}">
+                                ${result.success ? 'PASS' : 'FAIL'}
+                            </span>
+                        </div>
+                    `;
+                } catch (error) {
+                    item.className = 'check-item error';
+                    item.innerHTML = `
+                        <div class="icon" style="color: #ef4444">✗</div>
+                        <div class="check-content">
+                            <label>${check.name}</label>
+                            <div class="detail error">${error.message}</div>
+                            <span class="status-badge error">FAIL</span>
+                        </div>
+                    `;
+                }
+            }
+        }
+        
+        // Run checks on load
+        window.addEventListener('load', runChecks);
+    </script>
+</body>
+</html>

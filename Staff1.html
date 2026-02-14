@@ -1,0 +1,2663 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Staff Dashboard - Padua Hardware</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="root.css" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      body {
+        background: url(assets/back.jpg) no-repeat center center/cover fixed;
+        backdrop-filter: brightness(0.2);
+        color: white;
+        overflow-x: hidden;
+      }
+
+      .container {
+        display: flex;
+        min-height: 100vh;
+        backdrop-filter: blur(10px);
+        gap: 20px;
+        padding: 18px; /* consistent outer spacing */
+      }
+
+      /* SIDEBAR */
+      .sidebar {
+        width: 280px;
+        background:
+          linear-gradient(var(--bg-darker), var(--bg-dark)) padding-box,
+          linear-gradient(140deg, var(--color-light-blue), #ff00a2) border-box;
+        background-clip: padding-box, border-box;
+        border: 5px solid transparent;
+        padding: 24px 20px; /* reduced to balance layout */
+        position: relative;
+        overflow: hidden;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 28px; /* tighter spacing */
+        padding: 14px; /* reduced padding */
+        background: rgba(var(--color-white-rgb), 0.06);
+        border-radius: 12px;
+        border: 1px solid rgba(var(--color-white-rgb), 0.08);
+        position: relative;
+        z-index: 1;
+      }
+
+      .brand img {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        border: 2px solid rgba(var(--color-white-rgb), 0.3);
+      }
+
+      .brand h4 {
+        font-size: 18px;
+        font-weight: 700;
+        background: linear-gradient(90deg, var(--color-light-blue), #ff48ff);
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+      }
+
+      .brand small {
+        color: var(--color-gray-medium);
+        font-size: 12px;
+      }
+
+      .welcome {
+        margin-top: auto;
+        padding: 30px 0;
+        text-align: center;
+        position: relative;
+        z-index: 1;
+      }
+
+      .welcome h2 {
+        font-size: 24px;
+        font-weight: 700;
+        background: linear-gradient(90deg, var(--color-light-blue), #ff48ff);
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      /* MAIN */
+      .main {
+        flex: 1;
+        padding: 22px; /* slightly reduced for consistent gutters */
+        position: relative;
+      }
+
+      /* TOPBAR */
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 22px; /* reduced gap to match new paddings */
+        padding: 16px 20px; /* lighter padding */
+        background:
+          linear-gradient(var(--bg-darker), var(--bg-dark)) padding-box,
+          linear-gradient(140deg, var(--color-light-blue), #ff00a2) border-box;
+        background-clip: padding-box, border-box;
+        border: 5px solid transparent;
+        border-radius: 14px;
+      }
+
+      .menu {
+        display: flex;
+        gap: 20px;
+      }
+
+      .menu a {
+        color: var(--color-light-blue);
+        text-decoration: none;
+        font-weight: 500;
+        padding: 12px 20px;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .menu a::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(var(--color-white-rgb), 0.2),
+          transparent
+        );
+        transition: left 0.5s;
+      }
+
+      .menu a:hover::before {
+        left: 100%;
+      }
+
+      .menu a:hover {
+        color: white;
+        background: rgba(var(--color-white-rgb), 0.1);
+        transform: translateY(-2px);
+      }
+
+      .menu .active {
+        background: linear-gradient(90deg, var(--color-light-blue), #ff48ff);
+        color: white;
+      }
+
+      .icons {
+        display: flex;
+        gap: 15px;
+      }
+
+      .icons i {
+        color: #bcd9ff;
+        font-size: 20px;
+        padding: 12px;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: rgba(var(--color-white-rgb), 0.1);
+      }
+
+      .icons i:hover {
+        color: var(--color-light-blue);
+        background: rgba(var(--color-white-rgb), 0.2);
+        transform: scale(1.1);
+      }
+
+      /* NOTIFICATION POPUP */
+      .icon-container {
+        position: relative;
+      }
+
+      .notification-popup {
+        position: absolute;
+        top: 50px;
+        right: 0;
+        width: 380px;
+        background: linear-gradient(145deg, #0d1430, #070b1d);
+        border-radius: 16px;
+        border: 2px solid rgba(0, 200, 255, 0.3);
+        padding: 20px;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: all 0.3s ease;
+        z-index: 1000;
+        max-height: 500px;
+        overflow-y: auto;
+      }
+
+      .notification-popup.show {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      .notification-title {
+        text-align: center;
+        margin-bottom: 15px;
+        letter-spacing: 1px;
+        font-size: 18px;
+        font-weight: 700;
+        color: white;
+      }
+
+      .date-label {
+        display: block;
+        margin: 15px 0 10px;
+        color: var(--color-light-blue);
+        font-size: 13px;
+        font-weight: 600;
+      }
+
+      .notification-item {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        margin-bottom: 12px;
+      }
+
+      .notification-icon {
+        font-size: 18px;
+        min-width: 24px;
+        text-align: center;
+      }
+
+      .notification-text {
+        flex: 1;
+      }
+
+      .notification-text strong {
+        font-size: 14px;
+        color: white;
+        display: block;
+      }
+
+      .notification-text p {
+        font-size: 12px;
+        color: #cbd5ff;
+        margin-top: 3px;
+        line-height: 1.4;
+      }
+
+      .notification-divider {
+        height: 1px;
+        background: rgba(var(--color-white-rgb), 0.15);
+        margin: 12px 0;
+      }
+
+      /* CARDS */
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+        margin: 30px 0;
+      }
+
+      .card {
+        background:
+          linear-gradient(var(--bg-darker), var(--bg-dark)) padding-box,
+          linear-gradient(140deg, var(--color-light-blue), #ff00a2) border-box;
+        background-clip: padding-box, border-box;
+        border: 5px solid transparent;
+        padding: 25px;
+        border-radius: 18px;
+        transition: all 0.3s ease;
+        text-align: center;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+      }
+
+      .card-icon {
+        font-size: 40px;
+        margin-bottom: 15px;
+        background: linear-gradient(90deg, var(--color-light-blue), #ff48ff);
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+      }
+
+      .card h3 {
+        font-size: 28px;
+        font-weight: 800;
+        color: white;
+        margin-bottom: 5px;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .card p {
+        font-size: 14px;
+        color: #bcd9ff;
+        font-weight: 500;
+      }
+
+      /* PANEL */
+      .panel {
+        background:
+          linear-gradient(var(--bg-darker), var(--bg-dark)) padding-box,
+          linear-gradient(140deg, var(--color-light-blue), #ff00a2) border-box;
+        background-clip: padding-box, border-box;
+        border: 5px solid transparent;
+        padding: 20px;
+        border-radius: 14px;
+        margin-bottom: 18px;
+      }
+
+      .panel h3 {
+        font-size: 20px;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 12px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        color: #bcd9ff;
+      }
+
+      thead th {
+        text-align: left;
+        padding: 10px 12px;
+        color: #bcd9ff;
+        font-weight: 600;
+        border-bottom: 2px solid rgba(0, 200, 255, 0.3);
+      }
+
+      tbody td {
+        padding: 10px 12px;
+        border-top: 1px solid rgba(var(--color-white-rgb), 0.03);
+      }
+
+      tbody tr:hover {
+        background: rgba(var(--color-white-rgb), 0.02);
+      }
+
+      /* Status badges */
+      .status-badge {
+        display: inline-block;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-weight: 700;
+        font-size: 13px;
+        border: 1px solid transparent;
+        text-transform: capitalize;
+      }
+
+      .status-active, .status-badge.status-active {
+        color: #10b981;
+        font-weight: 600;
+        background: rgba(16, 185, 129, 0.12);
+        border-color: rgba(16, 185, 129, 0.18);
+      }
+
+      .status-pending, .status-badge.status-pending {
+        color: #f59e0b;
+        font-weight: 600;
+        background: rgba(245, 158, 11, 0.12);
+        border-color: rgba(245, 158, 11, 0.18);
+      }
+
+      .status-completed, .status-badge.status-completed {
+        color: var(--color-light-blue);
+        font-weight: 600;
+        background: rgba(var(--color-light-blue-rgb), 0.12);
+        border-color: rgba(var(--color-light-blue-rgb), 0.18);
+      }
+
+      .status-inactive, .status-badge.status-inactive {
+        color: #9ca3af;
+        font-weight: 600;
+        background: rgba(156, 163, 175, 0.12);
+        border-color: rgba(156, 163, 175, 0.18);
+      }
+
+      /* Search + clear actions (single search control) */
+      .search-actions {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .search-actions .btn {
+        padding: 10px 14px;
+        border-radius: 10px;
+        font-size: 14px;
+      }
+
+      /* MENU POPUP */
+      .menu-popup-container {
+        position: relative;
+      }
+
+      .menu-toggle {
+        background: linear-gradient(90deg, var(--color-light-blue), #ff48ff);
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+      }
+
+      .menu-toggle:hover {
+        transform: translateY(-2px);
+      }
+
+      .menu-popup {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        width: 280px;
+        background:
+          linear-gradient(var(--bg-darker), var(--bg-dark)) padding-box,
+          linear-gradient(140deg, var(--color-light-blue), #ff00a2) border-box;
+        background-clip: padding-box, border-box;
+        border: 3px solid transparent;
+        border-radius: 18px;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: all 0.3s ease;
+        z-index: 1000;
+        overflow: hidden;
+      }
+
+      .menu-popup.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      .popup-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 25px;
+        border-bottom: 1px solid rgba(var(--color-white-rgb), 0.1);
+      }
+
+      .popup-header h4 {
+        color: white;
+        font-size: 18px;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .popup-header h4 i {
+        color: var(--color-light-blue);
+      }
+
+      .close-popup {
+        background: none;
+        border: none;
+        color: #bcd9ff;
+        font-size: 18px;
+        cursor: pointer;
+        padding: 5px;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+      }
+
+      .close-popup:hover {
+        color: #ef4444;
+        background: rgba(239, 68, 68, 0.1);
+      }
+
+      .popup-content {
+        padding: 10px 0;
+      }
+
+      .popup-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        color: #bcd9ff;
+        text-decoration: none;
+        padding: 15px 25px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .popup-item::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(var(--color-white-rgb), 0.1),
+          transparent
+        );
+        transition: left 0.5s;
+      }
+
+      .popup-item:hover::before {
+        left: 100%;
+      }
+
+      .popup-item:hover {
+        color: white;
+        background: rgba(var(--color-white-rgb), 0.1);
+        transform: translateX(5px);
+      }
+
+      .popup-item i {
+        font-size: 18px;
+        width: 20px;
+        color: var(--color-light-blue);
+      }
+
+      .popup-item span {
+        font-weight: 500;
+      }
+
+      .popup-divider {
+        height: 1px;
+        background: rgba(var(--color-white-rgb), 0.1);
+        margin: 10px 25px;
+      }
+
+      .logout-btn {
+        color: #ef4444 !important;
+      }
+
+      .logout-btn:hover {
+        background: rgba(239, 68, 68, 0.1) !important;
+        color: #ef4444 !important;
+      }
+
+      .logout-btn i {
+        color: #ef4444 !important;
+      }
+
+      @media (max-width: 992px) {
+        .container {
+          flex-direction: column;
+        }
+
+        .sidebar {
+          width: 100%;
+        }
+      }
+
+      /* ===== MODAL STYLES ===== */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 1999;
+      }
+
+      .modal-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .modal {
+        background: linear-gradient(135deg, var(--bg-darker), var(--bg-dark));
+        border: 2px solid rgba(var(--color-light-blue-rgb), 0.3);
+        border-radius: 18px;
+        max-width: 500px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+        animation: slideUp 0.3s ease;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .modal-header {
+        padding: 25px 25px 15px;
+        border-bottom: 1px solid rgba(0, 200, 255, 0.2);
+      }
+
+      .modal-header h2 {
+        font-size: 22px;
+        font-weight: 700;
+        color: white;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .modal-header i {
+        color: var(--color-light-blue);
+        font-size: 20px;
+      }
+
+      .modal-body {
+        padding: 25px;
+      }
+
+      .modal-section {
+        margin-bottom: 20px;
+      }
+
+      .modal-section label {
+        display: block;
+        margin-bottom: 8px;
+        color: #bcd9ff;
+        font-weight: 600;
+        font-size: 14px;
+      }
+
+      .input-field {
+        width: 100%;
+        padding: 12px 15px;
+        background: rgba(var(--color-white-rgb), 0.05);
+        border: 2px solid rgba(0, 200, 255, 0.2);
+        border-radius: 10px;
+        color: white;
+        font-size: 14px;
+        font-family: "Poppins", sans-serif;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+      }
+
+      .input-field:focus {
+        outline: none;
+        border-color: var(--color-light-blue);
+        background: rgba(var(--color-light-blue-rgb), 0.05);
+      }
+
+      .input-field::placeholder {
+        color: #7a8aa1;
+      }
+
+      textarea.input-field {
+        font-family: "Poppins", sans-serif;
+      }
+
+      .reason-select {
+        width: 100%;
+        padding: 12px 15px;
+        background: rgba(var(--color-white-rgb), 0.05);
+        border: 2px solid rgba(0, 200, 255, 0.2);
+        border-radius: 10px;
+        color: white;
+        font-size: 14px;
+        font-family: "Poppins", sans-serif;
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+
+      .reason-select:focus {
+        outline: none;
+        border-color: var(--color-light-blue);
+        background: rgba(var(--color-light-blue-rgb), 0.05);
+      }
+
+      .reason-select option {
+        background: var(--bg-darker);
+        color: white;
+      }
+
+      .modal-actions {
+        padding: 20px 25px;
+        border-top: 1px solid rgba(0, 200, 255, 0.2);
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+      }
+
+      /* ===== BUTTON STYLES ===== */
+      .btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 14px;
+        font-family: "Poppins", sans-serif;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .primary-btn {
+        padding: 12px 24px;
+        background: linear-gradient(90deg, var(--color-light-blue), #00a8e8);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 14px;
+        font-family: "Poppins", sans-serif;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .primary-btn:hover {
+        transform: translateY(-2px);
+      }
+
+      .btn-cancel {
+        background: rgba(var(--color-white-rgb), 0.1);
+        color: #bcd9ff;
+        border: 1px solid rgba(var(--color-white-rgb), 0.2);
+      }
+
+      .btn-cancel:hover {
+        background: rgba(var(--color-white-rgb), 0.15);
+        color: white;
+        border-color: rgba(var(--color-white-rgb), 0.3);
+      }
+
+      .btn-approve {
+        background: linear-gradient(90deg, #10b981, #059669);
+        color: white;
+      }
+
+      .btn-approve:hover {
+        transform: translateY(-2px);
+      }
+
+      .btn-reject {
+        background: linear-gradient(90deg, #ef4444, #dc2626);
+        color: white;
+      }
+
+      .btn-reject:hover {
+        transform: translateY(-2px);
+      }
+
+      .btn-secondary {
+        background: rgba(255, 255, 255, 0.1);
+        color: #bcd9ff;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.15);
+        color: white;
+      }
+
+      .action-btn {
+        padding: 8px 12px;
+        background: rgba(var(--color-light-blue-rgb), 0.1);
+        color: var(--color-light-blue);
+        border: 1px solid rgba(var(--color-light-blue-rgb), 0.3);
+        border-radius: 8px;
+        font-size: 13px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .action-btn:hover {
+        background: rgba(var(--color-light-blue-rgb), 0.2);
+        border-color: var(--color-light-blue);
+        box-shadow: 0 4px 12px rgba(var(--color-light-blue-rgb), 0.3);
+      }
+
+      .action-btn.delete {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+        border-color: rgba(239, 68, 68, 0.3);
+      }
+
+      .action-btn.delete:hover {
+        background: rgba(239, 68, 68, 0.2);
+        border-color: #ef4444;
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+      }
+
+      /* ===== SEARCH & FILTER STYLES ===== */
+      .search-filter-container {
+        display: grid;
+        grid-template-columns: 1fr 280px;
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      .search-box {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .search-box i {
+        color: var(--color-light-blue);
+        font-size: 16px;
+      }
+
+      .search-box input {
+        flex: 1;
+        padding: 12px 15px;
+        background: rgba(var(--color-white-rgb), 0.05);
+        border: 2px solid rgba(var(--color-light-blue-rgb), 0.2);
+        border-radius: 10px;
+        color: white;
+        font-size: 14px;
+        transition: all 0.3s ease;
+      }
+
+      .search-box input:focus {
+        outline: none;
+        border-color: var(--color-light-blue);
+        background: rgba(var(--color-light-blue-rgb), 0.05);
+        box-shadow: 0 0 15px rgba(var(--color-light-blue-rgb), 0.2);
+      }
+
+      .search-box input::placeholder {
+        color: #7a8aa1;
+      }
+
+      .status-filter {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .status-filter label {
+        color: #bcd9ff;
+        font-weight: 600;
+        font-size: 13px;
+      }
+
+      .status-filter select {
+        padding: 10px 12px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 2px solid rgba(0, 200, 255, 0.2);
+        border-radius: 10px;
+        color: white;
+        font-size: 13px;
+        font-family: "Poppins", sans-serif;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .status-filter select:focus {
+        outline: none;
+        border-color: var(--color-light-blue);
+        background: rgba(var(--color-light-blue-rgb), 0.05);
+      }
+
+      .status-filter select option {
+        background: var(--bg-darker);
+        color: white;
+      }
+
+      /* ===== TABLE RESPONSIVE ===== */
+      .table-responsive {
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      table thead th {
+        background: rgba(var(--color-light-blue-rgb), 0.1);
+        padding: 12px 15px;
+        text-align: left;
+        color: var(--color-light-blue);
+        font-weight: 600;
+        border-bottom: 2px solid rgba(var(--color-light-blue-rgb), 0.3);
+        font-size: 13px;
+      }
+
+      table tbody tr {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        transition: all 0.3s ease;
+      }
+
+      table tbody tr:hover {
+        background: rgba(0, 200, 255, 0.08);
+      }
+
+      table tbody td {
+        padding: 12px 15px;
+        color: #bcd9ff;
+        font-size: 13px;
+      }
+
+      @media (max-width: 768px) {
+        .search-filter-container {
+          grid-template-columns: 1fr;
+        }
+
+        .modal {
+          width: 95%;
+          max-width: none;
+        }
+
+        .modal-actions {
+          flex-direction: column;
+        }
+
+        .modal-actions .btn {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+
+      /* Search box styles (match Home.html) */
+      .search-box {
+        flex: 1;
+        min-width: 250px;
+        position: relative;
+      }
+
+      .search-box input {
+        width: 100%;
+        padding: 12px 15px 12px 40px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 2px solid rgba(0, 200, 255, 0.3);
+        border-radius: 10px;
+        color: white;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        font-family: "Poppins", sans-serif;
+      }
+
+      .search-box input:focus {
+        outline: none;
+        border-color: var(--color-light-blue);
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .search-box input::placeholder {
+        color: #8899aa;
+      }
+
+      .search-box i {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--color-light-blue);
+        pointer-events: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+        <div class="brand">
+          <div>
+            <h4>Padua Hardware</h4>
+            <small>Staff Dashboard</small>
+          </div>
+        </div>
+
+        <h2 class="welcome">Welcome<br />Staff!</h2>
+      </aside>
+
+      <!-- MAIN -->
+      <main class="main">
+        <!-- TOP NAV -->
+        <nav class="topbar">
+          <div class="menu">
+            <a href="Staff1.html" class="active"
+              ><i class="fas fa-home"></i> Home</a
+            >
+            <a href="#customers" onclick="navigateTo('customers')"
+              ><i class="fas fa-users"></i> Customers</a
+            >
+            <a href="#orders" onclick="navigateTo('orders')"
+              ><i class="fas fa-shopping-cart"></i> Orders</a
+            >
+            <a href="#sales" onclick="navigateTo('sales')"
+              ><i class="fas fa-chart-line"></i> Sales</a
+            >
+          </div>
+          <div class="menu-popup-container">
+            <button class="menu-toggle" onclick="toggleMenuPopup()">
+              <i class="fas fa-bars"></i> Menu
+            </button>
+
+            <div class="menu-popup" id="menuPopup">
+              <div class="popup-header">
+                <h4>Quick Menu</h4>
+                <button class="close-popup" onclick="toggleMenuPopup()">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+              <div class="popup-content">
+                <a href="#" class="popup-item">
+                  <i class="fas fa-clock"></i>
+                  <span>Schedule</span>
+                </a>
+                <a href="#" class="popup-item">
+                  <i class="fas fa-box"></i>
+                  <span>Inventory Check</span>
+                </a>
+                <a href="#" class="popup-item">
+                  <i class="fas fa-phone"></i>
+                  <span>Contact</span>
+                </a>
+                <a href="#" class="popup-item">
+                  <i class="fas fa-envelope"></i>
+                  <span>Messages</span>
+                </a>
+                <div class="popup-divider"></div>
+                <a
+                  href="#"
+                  class="popup-item logout-btn"
+                  onclick="
+                    logout(event);
+                    return false;
+                  "
+                >
+                  <i class="fas fa-sign-out-alt"></i>
+                  <span>Logout</span>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="icons">
+            <div class="icon-container">
+              <i class="fas fa-bell" onclick="toggleNotification()"></i>
+              <div class="notification-popup" id="notificationPopup">
+                <h3 class="notification-title">NOTIFICATIONS</h3>
+
+                <span class="date-label">Today</span>
+
+                <div class="notification-item">
+                  <div class="notification-icon">📦</div>
+                  <div class="notification-text">
+                    <strong>New Order Received</strong>
+                    <p>Order #1023 ready for processing.</p>
+                  </div>
+                </div>
+
+                <div class="notification-divider"></div>
+
+                <div class="notification-item">
+                  <div class="notification-icon">🚚</div>
+                  <div class="notification-text">
+                    <strong>Ready for Delivery</strong>
+                    <p>Order #1003 is ready for pickup by delivery staff.</p>
+                  </div>
+                </div>
+
+                <span class="date-label">Yesterday</span>
+
+                <div class="notification-item">
+                  <div class="notification-icon" style="color: #00ff9c">✔</div>
+                  <div class="notification-text">
+                    <strong>Order Completed</strong>
+                    <p>Order #1001 has been successfully delivered.</p>
+                  </div>
+                </div>
+
+                <div class="notification-divider"></div>
+
+                <div class="notification-item">
+                  <div class="notification-icon" style="color: #ffcc00">⚠</div>
+                  <div class="notification-text">
+                    <strong>Task Reminder</strong>
+                    <p>Stock Count for Tools section due today.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </nav>
+
+        <!-- HOME SECTION -->
+        <section id="homeSection">
+          <!-- DASHBOARD HEADER -->
+          <div style="margin-bottom: 25px;">
+            <h2 style="color: white; font-size: 28px; font-weight: 700; margin-bottom: 5px;">Staff Dashboard</h2>
+            <p style="color: #cbd5ff; font-size: 14px;">Welcome back! Here's your daily performance summary</p>
+          </div>
+
+          <!-- KEY METRICS CARDS -->
+          <div class="cards">
+            <div class="card">
+              <div class="card-icon"><i class="fas fa-coins"></i></div>
+              <h3 id="dailySales">₱12,450</h3>
+              <p>Daily Sales</p>
+            </div>
+            <div class="card">
+              <div class="card-icon"><i class="fas fa-receipt"></i></div>
+              <h3 id="transactionsCount">32</h3>
+              <p>Transactions</p>
+            </div>
+            <div class="card">
+              <div class="card-icon"><i class="fas fa-boxes"></i></div>
+              <h3 id="stockItems">67</h3>
+              <p>Products In Stock</p>
+            </div>
+            <div class="card">
+              <div class="card-icon"><i class="fas fa-exclamation-triangle"></i></div>
+              <h3 id="lowStockItems">8</h3>
+              <p>Low Stock Items</p>
+            </div>
+          </div>
+
+          <!-- SALES SUMMARY & RECENT TRANSACTIONS -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+            <!-- DAILY SALES SUMMARY -->
+            <div class="panel">
+              <h3><i class="fas fa-chart-pie"></i> Daily Sales Summary</h3>
+              <div style="margin-top: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(0, 200, 255, 0.1); border-radius: 8px; margin-bottom: 10px;">
+                  <span style="color: #bcd9ff; font-size: 14px;">Morning Sales (6AM-12PM)</span>
+                  <span style="color: var(--color-light-blue); font-weight: 700;">₱5,230</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(16, 185, 129, 0.1); border-radius: 8px; margin-bottom: 10px;">
+                  <span style="color: #bcd9ff; font-size: 14px;">Afternoon Sales (12PM-6PM)</span>
+                  <span style="color: #10b981; font-weight: 700;">₱4,890</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(245, 158, 11, 0.1); border-radius: 8px;">
+                  <span style="color: #bcd9ff; font-size: 14px;">Evening Sales (6PM-12AM)</span>
+                  <span style="color: #f59e0b; font-weight: 700;">₱2,330</span>
+                </div>
+                <div style="height: 1px; background: rgba(255, 255, 255, 0.1); margin: 15px 0;"></div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(0, 200, 255, 0.2); border-radius: 8px;">
+                  <span style="color: white; font-weight: 700; font-size: 16px;">Total Daily Sales</span>
+                  <span style="color: var(--color-light-blue); font-weight: 700; font-size: 18px;">₱12,450</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- TRANSACTION METRICS -->
+            <div class="panel">
+              <h3><i class="fas fa-calculator"></i> Transaction Metrics</h3>
+              <div style="margin-top: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(0, 200, 255, 0.1); border-radius: 8px; margin-bottom: 10px;">
+                  <span style="color: #bcd9ff; font-size: 14px;">Total Transactions</span>
+                  <span style="color: var(--color-light-blue); font-weight: 700; font-size: 18px;">32</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(16, 185, 129, 0.1); border-radius: 8px; margin-bottom: 10px;">
+                  <span style="color: #bcd9ff; font-size: 14px;">Completed</span>
+                  <span style="color: #10b981; font-weight: 700; font-size: 18px;">28</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(245, 158, 11, 0.1); border-radius: 8px; margin-bottom: 10px;">
+                  <span style="color: #bcd9ff; font-size: 14px;">Pending</span>
+                  <span style="color: #f59e0b; font-weight: 700; font-size: 18px;">3</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(239, 68, 68, 0.1); border-radius: 8px; margin-bottom: 10px;">
+                  <span style="color: #bcd9ff; font-size: 14px;">Failed</span>
+                  <span style="color: #ef4444; font-weight: 700; font-size: 18px;">1</span>
+                </div>
+                <div style="height: 1px; background: rgba(255, 255, 255, 0.1); margin: 15px 0;"></div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px;">
+                  <span style="color: #bcd9ff; font-size: 13px;">Average Transaction Value</span>
+                  <span style="color: var(--color-light-blue); font-weight: 700;">₱389</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RECENT SALES TRANSACTIONS -->
+          <div class="panel">
+            <h3><i class="fas fa-receipt"></i> Recent Sales Transactions</h3>
+            <div class="table-responsive">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Transaction ID</th>
+                    <th>Customer</th>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Amount</th>
+                    <th>Payment</th>
+                    <th>Time</th>
+                  </tr>
+                </thead>
+                <tbody id="recentTransactionsTable"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- PRODUCT AVAILABILITY & STOCK LEVELS -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <!-- PRODUCT AVAILABILITY -->
+            <div class="panel">
+              <h3><i class="fas fa-cubes"></i> Product Availability</h3>
+              <div style="margin-top: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(16, 185, 129, 0.1); border-radius: 8px; margin-bottom: 10px;">
+                  <div>
+                    <p style="color: #bcd9ff; font-size: 13px; margin: 0;">In Stock</p>
+                    <p style="color: white; font-weight: 700; font-size: 16px; margin: 3px 0 0 0;">67 Products</p>
+                  </div>
+                  <i class="fas fa-check-circle" style="font-size: 28px; color: #10b981;"></i>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(245, 158, 11, 0.1); border-radius: 8px; margin-bottom: 10px;">
+                  <div>
+                    <p style="color: #bcd9ff; font-size: 13px; margin: 0;">Low Stock</p>
+                    <p style="color: white; font-weight: 700; font-size: 16px; margin: 3px 0 0 0;">8 Products</p>
+                  </div>
+                  <i class="fas fa-exclamation-triangle" style="font-size: 28px; color: #f59e0b;"></i>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(239, 68, 68, 0.1); border-radius: 8px;">
+                  <div>
+                    <p style="color: #bcd9ff; font-size: 13px; margin: 0;">Out of Stock</p>
+                    <p style="color: white; font-weight: 700; font-size: 16px; margin: 3px 0 0 0;">2 Products</p>
+                  </div>
+                  <i class="fas fa-times-circle" style="font-size: 28px; color: #ef4444;"></i>
+                </div>
+              </div>
+            </div>
+
+            <!-- CURRENT STOCK LEVELS -->
+            <div class="panel">
+              <h3><i class="fas fa-warehouse"></i> Current Stock Levels</h3>
+              <div style="margin-top: 20px;" id="stockLevelsContainer"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- CUSTOMERS SECTION -->
+        <section id="customersSection" style="display: none">
+          <div class="panel">
+            <h3><i class="fas fa-users"></i> Customer Management</h3>
+            <p style="color: #cbd5ff; margin-bottom: 20px;">Manage customer information, view purchase history, and track customer engagement</p>
+
+            <!-- ACTION BUTTONS -->
+            <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+              <button class="primary-btn" onclick="openAddCustomerModal()" style="display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-user-plus"></i> Add New Customer
+              </button>
+            </div>
+
+            <!-- SEARCH & FILTER -->
+            <div class="search-filter-container">
+              <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInputCustomers" placeholder="Search by ID, name, email, contact or address..." />
+                <div class="search-actions">
+                  <button id="clearSearchCustomers" class="btn btn-secondary">Clear</button>
+                </div>
+              </div>
+
+              <div class="status-filter">
+                <label for="statusFilterCustomers">Filter by Status:</label>
+                <select id="statusFilterCustomers">
+                  <option value="">All Status</option>
+                  <option value="Active">Active</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Inactive">Inactive</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- CUSTOMERS TABLE -->
+            <div class="table-responsive">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Customer ID</th>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Contact No.</th>
+                    <th>Date Registered</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="customerTable"></tbody>
+              </table>
+            </div> 
+          </div>
+        </section>
+
+        <!-- ADD CUSTOMER MODAL -->
+        <div class="modal-overlay" id="addCustomerModal" style="z-index:2000;" onclick="closeAddCustomerModal(event)">
+          <div class="modal" onclick="event.stopPropagation()" style="max-width: 600px;">
+            <div class="modal-header">
+              <h2>Add New Customer</h2>
+            </div>
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+              <div class="modal-section">
+                <label for="newCustomerName">Full Name: <span style="color: #ff6b6b;">*</span></label>
+                <input type="text" id="newCustomerName" class="input-field" placeholder="Enter full name" />
+              </div>
+              <div class="modal-section">
+                <label for="newCustomerEmail">Email: <span style="color: #ff6b6b;">*</span></label>
+                <input type="email" id="newCustomerEmail" class="input-field" placeholder="Enter email address" />
+              </div>
+              <div class="modal-section">
+                <label for="newCustomerContact">Contact Number: <span style="color: #ff6b6b;">*</span></label>
+                <input type="text" id="newCustomerContact" class="input-field" placeholder="Enter contact number" />
+              </div>
+              <div class="modal-section">
+                <label for="newCustomerAddress">Address: <span style="color: #ff6b6b;">*</span></label>
+                <textarea id="newCustomerAddress" class="input-field" placeholder="Enter full address" style="resize: vertical; min-height: 80px;"></textarea>
+              </div>
+            </div>
+            <div class="modal-actions">
+              <button type="button" class="btn btn-cancel" onclick="closeAddCustomerModal()">Cancel</button>
+              <button type="button" class="btn btn-approve" onclick="submitAddCustomer()">Add Customer</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- UPDATE CUSTOMER MODAL -->
+        <div class="modal-overlay" id="updateCustomerModal" style="z-index:2000;" onclick="closeUpdateCustomerModal(event)">
+          <div class="modal" onclick="event.stopPropagation()" style="max-width: 600px;">
+            <div class="modal-header">
+              <h2>Update Customer Information</h2>
+            </div>
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+              <div class="modal-section" style="background: rgba(0, 200, 255, 0.1); padding: 10px; border-radius: 6px; margin-bottom: 15px;">
+                <label>Customer ID:</label>
+                <p id="updateCustomerId" style="color: var(--color-light-blue); font-weight: 600;"></p>
+              </div>
+              <div class="modal-section">
+                <label for="updateCustomerName">Full Name:</label>
+                <input type="text" id="updateCustomerName" class="input-field" />
+              </div>
+              <div class="modal-section">
+                <label for="updateCustomerEmail">Email:</label>
+                <input type="email" id="updateCustomerEmail" class="input-field" />
+              </div>
+              <div class="modal-section">
+                <label for="updateCustomerContact">Contact Number:</label>
+                <input type="text" id="updateCustomerContact" class="input-field" />
+              </div>
+              <div class="modal-section">
+                <label for="updateCustomerAddress">Address:</label>
+                <textarea id="updateCustomerAddress" class="input-field" style="resize: vertical; min-height: 80px;"></textarea>
+              </div>
+              <div class="modal-section">
+                <label for="updateCustomerStatus">Status:</label>
+                <select id="updateCustomerStatus" class="reason-select">
+                  <option value="Active">Active</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Inactive">Inactive</option>
+                </select>
+              </div>
+            </div>
+            <div class="modal-actions">
+              <button type="button" class="btn btn-cancel" onclick="closeUpdateCustomerModal()">Cancel</button>
+              <button type="button" class="btn btn-approve" onclick="submitUpdateCustomer()">Update Customer</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIEW PURCHASE HISTORY MODAL -->
+        <div class="modal-overlay" id="purchaseHistoryModal" style="z-index:2000;" onclick="closePurchaseHistoryModal(event)">
+          <div class="modal" onclick="event.stopPropagation()" style="max-width: 700px;">
+            <div class="modal-header">
+              <h2>Customer Purchase History</h2>
+            </div>
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+              <div style="background: rgba(0, 200, 255, 0.1); padding: 15px; border-radius: 6px; margin-bottom: 20px;">
+                <p style="color: var(--color-light-blue); font-weight: 600; margin-bottom: 5px;" id="historyCustomerName"></p>
+                <p style="color: #cbd5ff; font-size: 12px;" id="historyCustomerId"></p>
+              </div>
+              <table style="width: 100%; font-size: 13px;">
+                <thead>
+                  <tr style="background: rgba(0, 200, 255, 0.1); border-radius: 6px;">
+                    <th style="padding: 10px; text-align: left;">Order ID</th>
+                    <th style="padding: 10px; text-align: left;">Date</th>
+                    <th style="padding: 10px; text-align: right;">Amount</th>
+                    <th style="padding: 10px; text-align: center;">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="purchaseHistoryTable" style="max-height: 400px; overflow-y: auto;">
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-actions">
+              <button type="button" class="btn btn-cancel" onclick="closePurchaseHistoryModal()">Close</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ORDERS SECTION -->
+        <section id="ordersSection" style="display: none">
+          <div class="panel">
+            <h3><i class="fas fa-shopping-cart"></i> Orders Management</h3>
+            <p style="color: #cbd5ff; margin-bottom: 20px;">Manage customer orders, track status, and process transactions</p>
+
+            <!-- ACTION BUTTONS -->
+            <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+              <button class="primary-btn" onclick="openCreateOrderModal()" style="display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-plus-circle"></i> Create New Order
+              </button>
+            </div>
+
+            <!-- SEARCH & FILTER -->
+            <div class="search-filter-container">
+              <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInputOrders" placeholder="Search by Order ID, Customer, Product..." />
+                <div class="search-actions">
+                  <button id="clearSearchOrders" class="btn btn-secondary">Clear</button>
+                </div>
+              </div>
+
+              <div class="status-filter">
+                <label for="statusFilterOrders">Filter by Status:</label>
+                <select id="statusFilterOrders">
+                  <option value="">All Status</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Confirmed">Confirmed</option>
+                  <option value="Processing">Processing</option>
+                  <option value="Shipped">Shipped</option>
+                  <option value="Completed">Completed</option>
+                  <option value="Cancelled">Cancelled</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- ORDERS TABLE -->
+            <div class="table-responsive">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Amount</th>
+                    <th>Payment Method</th>
+                    <th>Status</th>
+                    <th>Order Date</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="ordersTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- CREATE ORDER MODAL -->
+        <div class="modal-overlay" id="createOrderModal" style="z-index:2000;" onclick="closeCreateOrderModal(event)">
+          <div class="modal" onclick="event.stopPropagation()" style="max-width: 600px;">
+            <div class="modal-header">
+              <h2><i class="fas fa-plus-circle"></i> Create New Order</h2>
+            </div>
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+              <div class="modal-section">
+                <label for="orderCustomer">Customer: <span style="color: #ff6b6b;">*</span></label>
+                <select id="orderCustomer" class="reason-select">
+                  <option value="">Select Customer</option>
+                  <option value="Juan Dela Cruz">#CUST-001 - Juan Dela Cruz</option>
+                  <option value="Maria Santos">#CUST-002 - Maria Santos</option>
+                  <option value="Pedro Garcia">#CUST-003 - Pedro Garcia</option>
+                  <option value="Ana Rodriguez">#CUST-004 - Ana Rodriguez</option>
+                </select>
+              </div>
+              <div class="modal-section">
+                <label for="orderProduct">Product: <span style="color: #ff6b6b;">*</span></label>
+                <select id="orderProduct" class="reason-select">
+                  <option value="">Select Product</option>
+                  <option value="Cement (50kg)">Cement (50kg) - ₱750</option>
+                  <option value="Latex Paint (1L)">Latex Paint (1L) - ₱350</option>
+                  <option value="Claw Hammer">Claw Hammer - ₱600</option>
+                  <option value="Screwdriver Set">Screwdriver Set - ₱450</option>
+                  <option value="Paint Roller">Paint Roller - ₱210</option>
+                </select>
+              </div>
+              <div class="modal-section">
+                <label for="orderQuantity">Quantity: <span style="color: #ff6b6b;">*</span></label>
+                <input type="number" id="orderQuantity" class="input-field" placeholder="Enter quantity" min="1" />
+              </div>
+              <div class="modal-section">
+                <label for="orderPayment">Payment Method: <span style="color: #ff6b6b;">*</span></label>
+                <select id="orderPayment" class="reason-select">
+                  <option value="">Select Payment Method</option>
+                  <option value="Cash">Cash</option>
+                  <option value="Credit Card">Credit Card</option>
+                  <option value="Debit Card">Debit Card</option>
+                  <option value="GCash">GCash</option>
+                  <option value="Bank Transfer">Bank Transfer</option>
+                </select>
+              </div>
+            </div>
+            <div class="modal-actions">
+              <button type="button" class="btn btn-cancel" onclick="closeCreateOrderModal()">Cancel</button>
+              <button type="button" class="btn btn-approve" onclick="submitCreateOrder()">Create Order</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- UPDATE ORDER STATUS MODAL -->
+        <div class="modal-overlay" id="updateOrderModal" style="z-index:2000;" onclick="closeUpdateOrderModal(event)">
+          <div class="modal" onclick="event.stopPropagation()" style="max-width: 500px;">
+            <div class="modal-header">
+              <h2><i class="fas fa-edit"></i> Update Order Status</h2>
+            </div>
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+              <div class="modal-section" style="background: rgba(0, 200, 255, 0.1); padding: 10px; border-radius: 6px; margin-bottom: 15px;">
+                <label>Order ID:</label>
+                <p id="updateOrderId" style="color: var(--color-light-blue); font-weight: 600;"></p>
+              </div>
+              <div class="modal-section">
+                <label for="updateOrderStatus">New Status: <span style="color: #ff6b6b;">*</span></label>
+                <select id="updateOrderStatus" class="reason-select">
+                  <option value="Pending">Pending</option>
+                  <option value="Confirmed">Confirmed</option>
+                  <option value="Processing">Processing</option>
+                  <option value="Shipped">Shipped</option>
+                  <option value="Completed">Completed</option>
+                  <option value="Cancelled">Cancelled</option>
+                </select>
+              </div>
+            </div>
+            <div class="modal-actions">
+              <button type="button" class="btn btn-cancel" onclick="closeUpdateOrderModal()">Cancel</button>
+              <button type="button" class="btn btn-approve" onclick="submitUpdateOrderStatus()">Update Status</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- SALES SECTION -->
+        <section id="salesSection" style="display: none">
+          <div class="panel">
+            <h3><i class="fas fa-chart-line"></i> Sales Report</h3>
+            <p style="color: #cbd5ff; margin-bottom: 20px;">Track sales performance, revenue, and transaction data</p>
+
+            <!-- SALES METRICS -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px;">
+              <div class="card">
+                <div class="card-icon"><i class="fas fa-coins"></i></div>
+                <h3 id="totalSales">₱0</h3>
+                <p>Total Sales</p>
+              </div>
+              <div class="card">
+                <div class="card-icon"><i class="fas fa-receipt"></i></div>
+                <h3 id="totalOrders">0</h3>
+                <p>Total Orders</p>
+              </div>
+              <div class="card">
+                <div class="card-icon"><i class="fas fa-check-circle"></i></div>
+                <h3 id="completedOrders">0</h3>
+                <p>Completed Orders</p>
+              </div>
+              <div class="card">
+                <div class="card-icon"><i class="fas fa-dollar-sign"></i></div>
+                <h3 id="avgOrderValue">₱0</h3>
+                <p>Avg Order Value</p>
+              </div>
+            </div>
+
+            <!-- SALES BY PRODUCT -->
+            <div class="table-responsive">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Product</th>
+                    <th>Units Sold</th>
+                    <th>Total Revenue</th>
+                    <th>Percentage</th>
+                  </tr>
+                </thead>
+                <tbody id="salesByProductTable"></tbody>
+              </table>
+            </div>
+
+            <!-- SALES SUMMARY -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+              <div class="panel">
+                <h3><i class="fas fa-history"></i> Recent Transactions</h3>
+                <div class="table-responsive">
+                  <table style="font-size: 13px;">
+                    <thead>
+                      <tr>
+                        <th>Order ID</th>
+                        <th>Amount</th>
+                        <th>Date</th>
+                      </tr>
+                    </thead>
+                    <tbody id="recentTransactionsTableSales"></tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="panel">
+                <h3><i class="fas fa-chart-pie"></i> Payment Methods</h3>
+                <div id="paymentMethodsSales" style="margin-top: 15px;"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      // ===== BACKEND INTEGRATION SETUP =====
+      const API_BASE_URL = 'http://localhost/Offline/api';
+      const USE_BACKEND = true; // Set to false to use local data
+
+      // Fetch customers from backend
+      function fetchCustomersFromBackend() {
+        console.log('Fetching customers from backend...');
+        fetch(`${API_BASE_URL}/customers.php?action=all`)
+          .then(response => {
+            console.log('Fetch response status:', response.status);
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then(data => {
+            console.log('Customers response received:', data);
+            if (data.error) {
+              console.error('Error fetching customers:', data.error);
+              console.warn('Falling back to local data');
+            } else if (data.customers) {
+              customersData = data.customers;
+              console.log('Customers loaded from backend, count:', customersData.length);
+              renderCustomers(customersData);
+            } else {
+              console.error('Unexpected response format:', data);
+            }
+          })
+          .catch(error => {
+            console.error('Backend fetch error:', error);
+            console.warn('Falling back to local data - API may not be available');
+          });
+      }
+
+      // Fetch orders from backend
+      function fetchOrdersFromBackend() {
+        console.log('Fetching orders from backend...');
+        fetch(`${API_BASE_URL}/orders.php?action=all`)
+          .then(response => {
+            console.log('Fetch response status:', response.status);
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then(data => {
+            console.log('Orders response received:', data);
+            if (data.error) {
+              console.error('Error fetching orders:', data.error);
+              console.warn('Falling back to local data');
+            } else if (data.orders) {
+              ordersData = data.orders;
+              console.log('Orders loaded from backend, count:', ordersData.length);
+              renderOrders(ordersData);
+              updateSalesMetrics();
+            } else {
+              console.error('Unexpected response format:', data);
+            }
+          })
+          .catch(error => {
+            console.error('Backend fetch error:', error);
+            console.warn('Falling back to local data - API may not be available');
+          });
+      }
+
+      // Fetch products for dropdowns
+      function fetchProductsForDropdown() {
+        fetch(`${API_BASE_URL}/products.php?action=all`)
+          .then(response => response.json())
+          .then(data => {
+            if (data.products) {
+              populateProductDropdown(data.products);
+            }
+          })
+          .catch(error => console.error('Products fetch error:', error));
+      }
+
+      // Populate product dropdown
+      function populateProductDropdown(products) {
+        const select = document.getElementById('orderProduct');
+        if (!select) return;
+        select.innerHTML = '<option value="">Select Product</option>';
+        products.forEach(p => {
+          const option = document.createElement('option');
+          option.value = p.name;
+          option.textContent = `${p.name} - ₱${p.price}`;
+          select.appendChild(option);
+        });
+      }
+
+      // Order History Data
+      const orderHistoryData = [
+        {
+          id: "#ORD-1023",
+          customer: "Juan Dela Cruz",
+          type: "Delivery",
+          payment: "Credit Card",
+          status: "Pending",
+        },
+        {
+          id: "#ORD-1022",
+          customer: "Maria Santos",
+          type: "Pickup",
+          payment: "Cash",
+          status: "Ready",
+        },
+        {
+          id: "#ORD-1021",
+          customer: "Pedro Garcia",
+          type: "Delivery",
+          payment: "Bank Transfer",
+          status: "Shipped",
+        },
+        {
+          id: "#ORD-1020",
+          customer: "Ana Rodriguez",
+          type: "Pickup",
+          payment: "Credit Card",
+          status: "Completed",
+        },
+        {
+          id: "#ORD-1019",
+          customer: "Luis Fernando",
+          type: "Delivery",
+          payment: "Cash",
+          status: "Pending",
+        },
+      ];
+
+      // Render order history table
+      function renderOrderHistory() {
+        const tableBody = document.getElementById("orderHistoryTable");
+        tableBody.innerHTML = "";
+
+        orderHistoryData.forEach((order) => {
+          const statusClass =
+            order.status === "Completed"
+              ? "status-completed"
+              : order.status === "Ready" || order.status === "Shipped"
+                ? "status-active"
+                : "status-pending";
+          const row = document.createElement("tr");
+          row.innerHTML = `
+                    <td>${order.id}</td>
+                    <td>${order.customer}</td>
+                    <td>${order.type}</td>
+                    <td>${order.payment}</td>
+                    <td class="${statusClass}">${order.status}</td>
+                `;
+          tableBody.appendChild(row);
+        });
+      }
+
+      // Recent Sales Transactions Data
+      const recentTransactionsData = [
+        { id: '#TXN-1045', customer: 'Juan Dela Cruz', product: 'Claw Hammer', quantity: 2, amount: '₱1,200', payment: 'Cash', time: '02:45 PM' },
+        { id: '#TXN-1044', customer: 'Maria Santos', product: 'Latex Paint (1L)', quantity: 3, amount: '₱1,050', payment: 'Credit Card', time: '02:30 PM' },
+        { id: '#TXN-1043', customer: 'Pedro Garcia', product: 'Screwdriver Set', quantity: 1, amount: '₱450', payment: 'Cash', time: '02:15 PM' },
+        { id: '#TXN-1042', customer: 'Ana Rodriguez', product: 'Cement (50kg)', quantity: 5, amount: '₱3,750', payment: 'GCash', time: '01:50 PM' },
+        { id: '#TXN-1041', customer: 'Luis Fernando', product: 'Paint Roller', quantity: 2, amount: '₱420', payment: 'Cash', time: '01:30 PM' },
+        { id: '#TXN-1040', customer: 'Carmen Reyes', product: 'Pliers Set', quantity: 1, amount: '₱650', payment: 'Card', time: '01:15 PM' },
+      ];
+
+      // Render Recent Transactions
+      function renderRecentTransactions() {
+        const tableBody = document.getElementById('recentTransactionsTable');
+        tableBody.innerHTML = '';
+
+        recentTransactionsData.forEach(tx => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td><strong>${tx.id}</strong></td>
+            <td>${tx.customer}</td>
+            <td>${tx.product}</td>
+            <td style="text-align: center;">${tx.quantity}</td>
+            <td style="color: var(--color-light-blue); font-weight: 600;">${tx.amount}</td>
+            <td><span class="status-badge status-active">${tx.payment}</span></td>
+            <td style="color: #bcd9ff; font-size: 12px;">${tx.time}</td>
+          `;
+          tableBody.appendChild(row);
+        });
+      }
+
+      // Stock Levels Data
+      const stockData = [
+        { product: 'Cement (50kg)', quantity: 245, status: 'In Stock' },
+        { product: 'Latex Paint (1L)', quantity: 78, status: 'In Stock' },
+        { product: 'Claw Hammer', quantity: 156, status: 'In Stock' },
+        { product: 'Screwdriver Set', quantity: 42, status: 'Low Stock' },
+        { product: 'Pliers', quantity: 18, status: 'Low Stock' },
+      ];
+
+      // Render Stock Levels
+      function renderStockLevels() {
+        const container = document.getElementById('stockLevelsContainer');
+        container.innerHTML = '';
+
+        stockData.forEach(item => {
+          const statusColor = item.status === 'Low Stock' ? '#f59e0b' : '#10b981';
+          const statusBg = item.status === 'Low Stock' ? 'rgba(245, 158, 11, 0.1)' : 'rgba(16, 185, 129, 0.1)';
+          
+          const div = document.createElement('div');
+          div.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: ${statusBg}; border-radius: 8px; margin-bottom: 8px;">
+              <span style="color: #bcd9ff; font-size: 13px;">${item.product}</span>
+              <div style="text-align: right;">
+                <div style="color: white; font-weight: 700; font-size: 14px;">${item.quantity} units</div>
+                <div style="color: ${statusColor}; font-size: 11px; font-weight: 600;">${item.status}</div>
+              </div>
+            </div>
+          `;
+          container.appendChild(div);
+        });
+      }
+
+      // Navigation function
+      function navigateTo(section) {
+        document.getElementById("homeSection").style.display = "none";
+        document.getElementById("customersSection").style.display = "none";
+        document.getElementById("ordersSection").style.display = "none";
+        document.getElementById("salesSection").style.display = "none";
+
+        if (section === "customers") {
+          document.getElementById("customersSection").style.display = "block";
+        } else if (section === "orders") {
+          document.getElementById("ordersSection").style.display = "block";
+        } else if (section === "sales") {
+          document.getElementById("salesSection").style.display = "block";
+        } else {
+          document.getElementById("homeSection").style.display = "block";
+        }
+
+        // Update active menu item
+        document.querySelectorAll(".menu a").forEach((link) => {
+          link.classList.remove("active");
+        });
+        event.target.classList.add("active");
+      }
+
+      // Toggle notification popup
+      function toggleNotification() {
+        const notification = document.getElementById("notificationPopup");
+        notification.classList.toggle("show");
+      }
+
+      // Close notification when clicking outside
+      document.addEventListener("click", function (e) {
+        const notification = document.getElementById("notificationPopup");
+        const bellIcon = document.querySelector(".icon-container i");
+        if (
+          notification &&
+          !notification.contains(e.target) &&
+          !bellIcon.contains(e.target)
+        ) {
+          notification.classList.remove("show");
+        }
+      });
+
+      // Toggle menu popup
+      function toggleMenuPopup() {
+        const popup = document.getElementById("menuPopup");
+        popup.classList.toggle("active");
+      }
+
+      // Logout function
+      function logout(e) {
+        if (e) {
+          e.preventDefault();
+        }
+        if (
+          confirm(
+            "Are you sure you want to logout? Any unsaved changes will be lost.",
+          )
+        ) {
+          alert("Logged out successfully! Redirecting to login page...");
+          window.location.href = "login.html";
+        }
+      }
+
+      // Initial render
+      renderOrderHistory();
+      renderRecentTransactions();
+      renderStockLevels();
+
+      // Customers data and functions
+      const customersData = [
+        { 
+          id: '#CUST-001', 
+          name: 'Juan Dela Cruz', 
+          email: 'juan.cruz@email.com',
+          contact: '0917-123-4567', 
+          address: 'Brgy. San Isidro, Makati', 
+          dateRegistered: '2025-11-15',
+          status: 'Active',
+          purchaseHistory: [
+            { orderId: '#ORD-1023', date: '2026-02-03', amount: '₱5,450', status: 'Completed' },
+            { orderId: '#ORD-1015', date: '2026-01-28', amount: '₱3,200', status: 'Completed' },
+            { orderId: '#ORD-1008', date: '2026-01-10', amount: '₱8,750', status: 'Completed' }
+          ]
+        },
+        { 
+          id: '#CUST-002', 
+          name: 'Maria Santos', 
+          email: 'maria.santos@email.com',
+          contact: '0922-765-4321', 
+          address: 'Brgy. Poblacion, Pasig',
+          dateRegistered: '2025-12-05',
+          status: 'Active',
+          purchaseHistory: [
+            { orderId: '#ORD-1019', date: '2026-02-01', amount: '₱2,100', status: 'Completed' },
+            { orderId: '#ORD-1010', date: '2026-01-20', amount: '₱4,500', status: 'Completed' }
+          ]
+        },
+        { 
+          id: '#CUST-003', 
+          name: 'Pedro Garcia', 
+          email: 'pedro.garcia@email.com',
+          contact: '0933-555-1212', 
+          address: 'Brgy. Malinis, Quezon City',
+          dateRegistered: '2025-10-20',
+          status: 'Inactive',
+          purchaseHistory: [
+            { orderId: '#ORD-990', date: '2025-12-15', amount: '₱1,850', status: 'Completed' }
+          ]
+        },
+        { 
+          id: '#CUST-004', 
+          name: 'Ana Rodriguez', 
+          email: 'ana.rodriguez@email.com',
+          contact: '0944-222-3333', 
+          address: 'Brgy. Santa Cruz, Manila',
+          dateRegistered: '2025-09-30',
+          status: 'Active',
+          purchaseHistory: [
+            { orderId: '#ORD-1020', date: '2026-01-25', amount: '₱6,200', status: 'Completed' },
+            { orderId: '#ORD-1012', date: '2026-01-08', amount: '₱3,450', status: 'Completed' },
+            { orderId: '#ORD-998', date: '2025-12-20', amount: '₱2,900', status: 'Completed' }
+          ]
+        }
+      ];
+
+      let filteredCustomers = [...customersData];
+      let currentEditingCustomerId = null;
+
+      function renderCustomers(data) {
+        const tableBody = document.getElementById('customerTable');
+        tableBody.innerHTML = '';
+
+        if (!data || data.length === 0) {
+          tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px; color: #8899aa;">No customers found</td></tr>';
+          return;
+        }
+
+        data.forEach((c) => {
+          const statusCls = c.status.toLowerCase();
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${c.id}</td>
+            <td>${c.name}</td>
+            <td>${c.email}</td>
+            <td>${c.contact}</td>
+            <td>${c.dateRegistered}</td>
+            <td><span class="status-badge status-${statusCls}">${c.status}</span></td>
+            <td style="display: flex; gap: 5px;">
+              <button class="action-btn" onclick="openUpdateCustomerModal('${c.id}')" title="Edit" style="padding: 6px 10px; font-size: 12px;">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="action-btn" onclick="openPurchaseHistoryModal('${c.id}')" title="View History" style="padding: 6px 10px; font-size: 12px;">
+                <i class="fas fa-history"></i>
+              </button>
+            </td>
+          `;
+          tableBody.appendChild(row);
+        });
+      }
+
+      function filterCustomers() {
+        const searchTerm = document.getElementById('searchInputCustomers').value.toLowerCase();
+        const statusFilter = document.getElementById('statusFilterCustomers').value;
+
+        filteredCustomers = customersData.filter((c) => {
+          const matchesSearch =
+            c.id.toLowerCase().includes(searchTerm) ||
+            c.name.toLowerCase().includes(searchTerm) ||
+            c.email.toLowerCase().includes(searchTerm) ||
+            c.contact.toLowerCase().includes(searchTerm) ||
+            (c.address && c.address.toLowerCase().includes(searchTerm));
+          const matchesStatus = statusFilter === '' || c.status === statusFilter;
+          return matchesSearch && matchesStatus;
+        });
+
+        renderCustomers(filteredCustomers);
+      }
+
+      function openAddCustomerModal() {
+        console.log('Opening Add Customer Modal');
+        document.getElementById('addCustomerModal').classList.add('active');
+        document.getElementById('newCustomerName').value = '';
+        document.getElementById('newCustomerEmail').value = '';
+        document.getElementById('newCustomerContact').value = '';
+        document.getElementById('newCustomerAddress').value = '';
+        console.log('Modal active class added');
+      }
+
+      function closeAddCustomerModal(event) {
+        console.log('Closing Add Customer Modal', event);
+        if (event && event.target && event.target.id !== 'addCustomerModal') return;
+        document.getElementById('addCustomerModal').classList.remove('active');
+        // Clear form fields
+        document.getElementById('newCustomerName').value = '';
+        document.getElementById('newCustomerEmail').value = '';
+        document.getElementById('newCustomerContact').value = '';
+        document.getElementById('newCustomerAddress').value = '';
+        console.log('Modal active class removed and form cleared');
+      }
+
+      function submitAddCustomer() {
+        console.log('submitAddCustomer called');
+        const name = document.getElementById('newCustomerName').value.trim();
+        const email = document.getElementById('newCustomerEmail').value.trim();
+        const contact = document.getElementById('newCustomerContact').value.trim();
+        const address = document.getElementById('newCustomerAddress').value.trim();
+
+        console.log('Form values:', { name, email, contact, address });
+
+        if (!name || !email || !contact || !address) {
+          alert('Please fill in all required fields!');
+          return;
+        }
+
+        // Send to backend
+        const payload = { name, email, contact, address };
+        console.log('Sending payload to API:', payload);
+        console.log('API URL:', `${API_BASE_URL}/customers.php`);
+        
+        fetch(`${API_BASE_URL}/customers.php`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        })
+        .then(response => {
+          console.log('Fetch successful! Response status:', response.status);
+          console.log('Response headers:', {
+            'content-type': response.headers.get('content-type'),
+            'access-control-allow-origin': response.headers.get('access-control-allow-origin')
+          });
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log('Backend response:', data);
+          if (data.error) {
+            alert('Error: ' + data.error);
+          } else if (data.success === true) {
+            alert(`Customer ${name} has been added successfully!`);
+            closeAddCustomerModal();
+            // Refresh customers list
+            fetchCustomersFromBackend();
+          } else {
+            alert('Unexpected response from server');
+            console.log('Unexpected response:', data);
+          }
+        })
+        .catch(error => {
+          console.error('Fetch error details:', error);
+          console.error('Error name:', error.name);
+          console.error('Error message:', error.message);
+          console.error('Error stack:', error.stack);
+          console.error('API URL attempted:', `${API_BASE_URL}/customers.php`);
+          console.error('Checking connectivity to API server...');
+          
+          // Provide more helpful error message
+          let errorMsg = error.message;
+          if (error.message === 'Failed to fetch') {
+            errorMsg = 'Network error: Cannot reach API server at ' + API_BASE_URL + '/customers.php\n\nMake sure:\n1. Apache/PHP server is running\n2. MySQL service is running\n3. Database is set up\n4. Check browser console (F12) for details';
+          }
+          
+          alert('Error adding customer: ' + errorMsg);
+        });
+      }
+
+      function openUpdateCustomerModal(customerId) {
+        const customer = customersData.find(c => c.id === customerId);
+        if (!customer) return;
+
+        currentEditingCustomerId = customerId;
+        document.getElementById('updateCustomerId').textContent = customer.id;
+        document.getElementById('updateCustomerName').value = customer.name;
+        document.getElementById('updateCustomerEmail').value = customer.email;
+        document.getElementById('updateCustomerContact').value = customer.contact;
+        document.getElementById('updateCustomerAddress').value = customer.address;
+        document.getElementById('updateCustomerStatus').value = customer.status;
+        document.getElementById('updateCustomerModal').classList.add('active');
+      }
+
+      function closeUpdateCustomerModal(event) {
+        if (event && event.target && event.target.id !== 'updateCustomerModal') return;
+        document.getElementById('updateCustomerModal').classList.remove('active');
+        currentEditingCustomerId = null;
+      }
+
+      function submitUpdateCustomer() {
+        if (!currentEditingCustomerId) return;
+
+        const customer = customersData.find(c => c.id === currentEditingCustomerId);
+        if (!customer) return;
+
+        customer.name = document.getElementById('updateCustomerName').value.trim();
+        customer.email = document.getElementById('updateCustomerEmail').value.trim();
+        customer.contact = document.getElementById('updateCustomerContact').value.trim();
+        customer.address = document.getElementById('updateCustomerAddress').value.trim();
+        customer.status = document.getElementById('updateCustomerStatus').value;
+
+        alert('Customer information has been updated successfully!');
+        closeUpdateCustomerModal();
+        filterCustomers();
+      }
+
+      function openPurchaseHistoryModal(customerId) {
+        const customer = customersData.find(c => c.id === customerId);
+        if (!customer) return;
+
+        document.getElementById('historyCustomerName').textContent = customer.name;
+        document.getElementById('historyCustomerId').textContent = `${customer.id} | ${customer.email}`;
+        
+        const historyTable = document.getElementById('purchaseHistoryTable');
+        historyTable.innerHTML = '';
+
+        if (customer.purchaseHistory.length === 0) {
+          historyTable.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px; color: #8899aa;">No purchase history found</td></tr>';
+        } else {
+          customer.purchaseHistory.forEach(order => {
+            const row = document.createElement('tr');
+            const statusColor = order.status === 'Completed' ? '#10b981' : order.status === 'Pending' ? '#f59e0b' : '#ef4444';
+            row.innerHTML = `
+              <td style="padding: 10px;">${order.orderId}</td>
+              <td style="padding: 10px;">${order.date}</td>
+              <td style="padding: 10px; text-align: right; color: var(--color-light-blue); font-weight: 600;">${order.amount}</td>
+              <td style="padding: 10px; text-align: center;"><span style="background: ${statusColor}22; color: ${statusColor}; padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 600;">${order.status}</span></td>
+            `;
+            historyTable.appendChild(row);
+          });
+        }
+
+        document.getElementById('purchaseHistoryModal').classList.add('active');
+      }
+
+      function closePurchaseHistoryModal(event) {
+        if (event && event.target && event.target.id !== 'purchaseHistoryModal') return;
+        document.getElementById('purchaseHistoryModal').classList.remove('active');
+      }
+
+      // ===== ORDERS MANAGEMENT FUNCTIONS =====
+      const ordersData = [
+        { id: '#ORD-1045', customer: 'Juan Dela Cruz', product: 'Claw Hammer', quantity: 2, amount: 1200, paymentMethod: 'Cash', status: 'Completed', date: '2026-02-05' },
+        { id: '#ORD-1044', customer: 'Maria Santos', product: 'Latex Paint (1L)', quantity: 3, amount: 1050, paymentMethod: 'Credit Card', status: 'Shipped', date: '2026-02-05' },
+        { id: '#ORD-1043', customer: 'Pedro Garcia', product: 'Screwdriver Set', quantity: 1, amount: 450, paymentMethod: 'Cash', status: 'Processing', date: '2026-02-05' },
+        { id: '#ORD-1042', customer: 'Ana Rodriguez', product: 'Cement (50kg)', quantity: 5, amount: 3750, paymentMethod: 'GCash', status: 'Confirmed', date: '2026-02-04' },
+        { id: '#ORD-1041', customer: 'Luis Fernando', product: 'Paint Roller', quantity: 2, amount: 420, paymentMethod: 'Cash', status: 'Pending', date: '2026-02-04' },
+      ];
+
+      let filteredOrders = [...ordersData];
+      let currentEditingOrderId = null;
+
+      function renderOrders(data) {
+        const tableBody = document.getElementById('ordersTable');
+        tableBody.innerHTML = '';
+
+        if (!data || data.length === 0) {
+          tableBody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 20px; color: #8899aa;">No orders found</td></tr>';
+          return;
+        }
+
+        data.forEach((order) => {
+          const statusColor = order.status === 'Completed' ? 'status-completed' : order.status === 'Pending' ? 'status-pending' : 'status-active';
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td><strong>${order.id}</strong></td>
+            <td>${order.customer}</td>
+            <td>${order.product}</td>
+            <td>${order.quantity}</td>
+            <td style="color: var(--color-light-blue); font-weight: 600;">₱${order.amount.toLocaleString()}</td>
+            <td><span class="status-badge status-active">${order.paymentMethod}</span></td>
+            <td><span class="status-badge ${statusColor}">${order.status}</span></td>
+            <td>${order.date}</td>
+            <td style="display: flex; gap: 5px;">
+              <button class="action-btn" onclick="openUpdateOrderModal('${order.id}')" title="Update Status" style="padding: 6px 10px; font-size: 12px;">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="action-btn delete" onclick="deleteOrder('${order.id}')" title="Delete" style="padding: 6px 10px; font-size: 12px;">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          `;
+          tableBody.appendChild(row);
+        });
+      }
+
+      function filterOrders() {
+        const searchTerm = document.getElementById('searchInputOrders').value.toLowerCase();
+        const statusFilter = document.getElementById('statusFilterOrders').value;
+
+        filteredOrders = ordersData.filter((order) => {
+          const matchesSearch =
+            order.id.toLowerCase().includes(searchTerm) ||
+            order.customer.toLowerCase().includes(searchTerm) ||
+            order.product.toLowerCase().includes(searchTerm);
+          const matchesStatus = statusFilter === '' || order.status === statusFilter;
+          return matchesSearch && matchesStatus;
+        });
+
+        renderOrders(filteredOrders);
+      }
+
+      function openCreateOrderModal() {
+        console.log('Opening Create Order Modal');
+        document.getElementById('createOrderModal').classList.add('active');
+        document.getElementById('orderCustomer').value = '';
+        document.getElementById('orderProduct').value = '';
+        document.getElementById('orderQuantity').value = '';
+        document.getElementById('orderPayment').value = '';
+        console.log('Modal active class added');
+      }
+
+      function closeCreateOrderModal(event) {
+        console.log('Closing Create Order Modal', event);
+        if (event && event.target && event.target.id !== 'createOrderModal') return;
+        document.getElementById('createOrderModal').classList.remove('active');
+        // Clear form fields
+        document.getElementById('orderCustomer').value = '';
+        document.getElementById('orderProduct').value = '';
+        document.getElementById('orderQuantity').value = '';
+        document.getElementById('orderPayment').value = '';
+        console.log('Modal active class removed and form cleared');
+      }
+
+      function submitCreateOrder() {
+        console.log('submitCreateOrder called');
+        const customer = document.getElementById('orderCustomer').value.trim();
+        const product = document.getElementById('orderProduct').value.trim();
+        const quantity = parseInt(document.getElementById('orderQuantity').value);
+        const payment = document.getElementById('orderPayment').value;
+
+        console.log('Form values:', { customer, product, quantity, payment });
+
+        if (!customer || !product || !quantity || !payment) {
+          alert('Please fill in all required fields!');
+          return;
+        }
+
+        if (isNaN(quantity) || quantity <= 0) {
+          alert('Quantity must be a positive number!');
+          return;
+        }
+
+        // Send to backend
+        const payload = { customer, product, quantity, paymentMethod: payment };
+        console.log('Sending payload to API:', payload);
+        console.log('API URL:', `${API_BASE_URL}/orders.php`);
+        
+        fetch(`${API_BASE_URL}/orders.php`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        })
+        .then(response => {
+          console.log('Fetch successful! Response status:', response.status);
+          console.log('Response headers:', {
+            'content-type': response.headers.get('content-type'),
+            'access-control-allow-origin': response.headers.get('access-control-allow-origin')
+          });
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log('Backend response:', data);
+          if (data.error) {
+            alert('Error: ' + data.error);
+          } else if (data.success === true) {
+            alert(`Order ${data.order_id} created successfully!`);
+            closeCreateOrderModal();
+            // Refresh orders list and metrics
+            fetchOrdersFromBackend();
+            updateSalesMetrics();
+          } else {
+            alert('Unexpected response from server');
+            console.log('Unexpected response:', data);
+          }
+        })
+        .catch(error => {
+          console.error('Fetch error details:', error);
+          console.error('Error name:', error.name);
+          console.error('Error message:', error.message);
+          console.error('Error stack:', error.stack);
+          console.error('API URL attempted:', `${API_BASE_URL}/orders.php`);
+          console.error('Checking connectivity to API server...');
+          
+          // Provide more helpful error message
+          let errorMsg = error.message;
+          if (error.message === 'Failed to fetch') {
+            errorMsg = 'Network error: Cannot reach API server at ' + API_BASE_URL + '/orders.php\n\nMake sure:\n1. Apache/PHP server is running\n2. MySQL service is running\n3. Database is set up\n4. Check browser console (F12) for details';
+          }
+          
+          alert('Error creating order: ' + errorMsg);
+        });
+      }
+
+      function openUpdateOrderModal(orderId) {
+        const order = ordersData.find(o => o.id === orderId);
+        if (!order) return;
+
+        currentEditingOrderId = orderId;
+        document.getElementById('updateOrderId').textContent = order.id;
+        document.getElementById('updateOrderStatus').value = order.status;
+        document.getElementById('updateOrderModal').classList.add('active');
+      }
+
+      function closeUpdateOrderModal(event) {
+        if (event && event.target && event.target.id !== 'updateOrderModal') return;
+        document.getElementById('updateOrderModal').classList.remove('active');
+        currentEditingOrderId = null;
+      }
+
+      function submitUpdateOrderStatus() {
+        if (!currentEditingOrderId) return;
+
+        const order = ordersData.find(o => o.id === currentEditingOrderId);
+        if (!order) return;
+
+        order.status = document.getElementById('updateOrderStatus').value;
+        alert('Order status updated successfully!');
+        closeUpdateOrderModal();
+        filterOrders();
+        updateSalesMetrics();
+      }
+
+      function deleteOrder(orderId) {
+        if (confirm('Are you sure you want to delete this order?')) {
+          const index = ordersData.findIndex(o => o.id === orderId);
+          if (index > -1) {
+            ordersData.splice(index, 1);
+            alert('Order deleted successfully!');
+            filterOrders();
+            updateSalesMetrics();
+          }
+        }
+      }
+
+      // ===== SALES FUNCTIONS =====
+      function calculateSalesMetrics() {
+        const total = ordersData.reduce((sum, order) => sum + order.amount, 0);
+        const completed = ordersData.filter(o => o.status === 'Completed').length;
+        const avg = ordersData.length > 0 ? Math.round(total / ordersData.length) : 0;
+
+        return {
+          total: total,
+          count: ordersData.length,
+          completed: completed,
+          average: avg
+        };
+      }
+
+      function updateSalesMetrics() {
+        const metrics = calculateSalesMetrics();
+        document.getElementById('totalSales').textContent = '₱' + metrics.total.toLocaleString();
+        document.getElementById('totalOrders').textContent = metrics.count;
+        document.getElementById('completedOrders').textContent = metrics.completed;
+        document.getElementById('avgOrderValue').textContent = '₱' + metrics.average.toLocaleString();
+
+        renderSalesByProduct();
+        renderRecentTransactionsSales();
+        renderPaymentMethods();
+      }
+
+      function renderSalesByProduct() {
+        const productSales = {};
+        ordersData.forEach(order => {
+          if (!productSales[order.product]) {
+            productSales[order.product] = { units: 0, revenue: 0 };
+          }
+          productSales[order.product].units += order.quantity;
+          productSales[order.product].revenue += order.amount;
+        });
+
+        const tableBody = document.getElementById('salesByProductTable');
+        tableBody.innerHTML = '';
+        const totalRevenue = ordersData.reduce((sum, o) => sum + o.amount, 0);
+
+        Object.entries(productSales).forEach(([product, data]) => {
+          const percentage = ((data.revenue / totalRevenue) * 100).toFixed(1);
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${product}</td>
+            <td>${data.units}</td>
+            <td style="color: var(--color-light-blue); font-weight: 600;">₱${data.revenue.toLocaleString()}</td>
+            <td><div style="width: 100px; height: 20px; background: rgba(0, 200, 255, 0.1); border-radius: 10px; position: relative;">
+              <div style="width: ${percentage}%; height: 100%; background: linear-gradient(90deg, var(--color-light-blue), #00a8e8); border-radius: 10px;"></div>
+              <span style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); font-size: 11px;">${percentage}%</span>
+            </div></td>
+          `;
+          tableBody.appendChild(row);
+        });
+      }
+
+      function renderRecentTransactionsSales() {
+        const tableBody = document.getElementById('recentTransactionsTableSales');
+        tableBody.innerHTML = '';
+        const recent = ordersData.slice(-5).reverse();
+
+        recent.forEach(order => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td><strong>${order.id}</strong></td>
+            <td style="color: var(--color-light-blue); font-weight: 600;">₱${order.amount.toLocaleString()}</td>
+            <td>${order.date}</td>
+          `;
+          tableBody.appendChild(row);
+        });
+      }
+
+      function renderPaymentMethods() {
+        const paymentData = {};
+        ordersData.forEach(order => {
+          paymentData[order.paymentMethod] = (paymentData[order.paymentMethod] || 0) + 1;
+        });
+
+        const container = document.getElementById('paymentMethodsSales');
+        container.innerHTML = '';
+
+        Object.entries(paymentData).forEach(([method, count]) => {
+          const div = document.createElement('div');
+          div.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(0, 200, 255, 0.1); border-radius: 8px; margin-bottom: 8px;">
+              <span style="color: #bcd9ff;">${method}</span>
+              <span style="color: var(--color-light-blue); font-weight: 700;">${count} orders</span>
+            </div>
+          `;
+          container.appendChild(div);
+        });
+      }
+
+      document.getElementById('searchInputOrders').addEventListener('keyup', filterOrders);
+      document.getElementById('statusFilterOrders').addEventListener('change', filterOrders);
+      document.getElementById('clearSearchOrders').addEventListener('click', function () {
+        document.getElementById('searchInputOrders').value = '';
+        document.getElementById('statusFilterOrders').value = '';
+        filterOrders();
+      });
+      document.getElementById('statusFilterCustomers').addEventListener('change', filterCustomers);
+      document.getElementById('clearSearchCustomers').addEventListener('click', function () {
+        document.getElementById('searchInputCustomers').value = '';
+        document.getElementById('statusFilterCustomers').value = '';
+        filterCustomers();
+      });
+
+      // Orders Section Event Listeners
+      document.getElementById('searchInputOrders').addEventListener('keyup', filterOrders);
+      document.getElementById('statusFilterOrders').addEventListener('change', filterOrders);
+      document.getElementById('clearSearchOrders').addEventListener('click', function () {
+        document.getElementById('searchInputOrders').value = '';
+        document.getElementById('statusFilterOrders').value = '';
+        filterOrders();
+      });
+
+      // Utility function to format currency
+      window.formatCurrency = function(amount) {
+        return '₱' + parseFloat(amount).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      };
+
+      // Utility function to format date
+      window.formatDate = function(date) {
+        return new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+      };
+
+      // Utility function to get status badge color
+      window.getStatusClass = function(status) {
+        const statusMap = {
+          'Active': 'status-active',
+          'Pending': 'status-pending',
+          'Inactive': 'status-inactive',
+          'Confirmed': 'status-confirmed',
+          'Processing': 'status-processing',
+          'Shipped': 'status-shipped',
+          'Completed': 'status-completed',
+          'Cancelled': 'status-cancelled'
+        };
+        return statusMap[status] || 'status-pending';
+      };
+
+      // Modal overlay click handlers - close modals when clicking outside
+      const addCustomerModal = document.getElementById('addCustomerModal');
+      const updateCustomerModal = document.getElementById('updateCustomerModal');
+      const purchaseHistoryModal = document.getElementById('purchaseHistoryModal');
+      const createOrderModal = document.getElementById('createOrderModal');
+      const updateOrderModal = document.getElementById('updateOrderModal');
+
+      window.addEventListener('click', function(event) {
+        if (event.target === addCustomerModal) {
+          closeAddCustomerModal();
+        }
+        if (event.target === updateCustomerModal) {
+          closeUpdateCustomerModal();
+        }
+        if (event.target === purchaseHistoryModal) {
+          closePurchaseHistoryModal();
+        }
+        if (event.target === createOrderModal) {
+          closeCreateOrderModal();
+        }
+        if (event.target === updateOrderModal) {
+          closeUpdateOrderModal();
+        }
+      });
+
+      // Keyboard close handlers - press ESC to close modals
+      document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+          if (addCustomerModal && addCustomerModal.classList.contains('active')) {
+            closeAddCustomerModal();
+          }
+          if (updateCustomerModal && updateCustomerModal.classList.contains('active')) {
+            closeUpdateCustomerModal();
+          }
+          if (purchaseHistoryModal && purchaseHistoryModal.classList.contains('active')) {
+            closePurchaseHistoryModal();
+          }
+          if (createOrderModal && createOrderModal.classList.contains('active')) {
+            closeCreateOrderModal();
+          }
+          if (updateOrderModal && updateOrderModal.classList.contains('active')) {
+            closeUpdateOrderModal();
+          }
+        }
+      });
+
+      // Test API connectivity
+      function testAPIConnectivity() {
+        console.log('Testing API connectivity...');
+        fetch(`${API_BASE_URL}/customers.php?action=all`)
+          .then(response => {
+            console.log('✓ API is reachable! Status:', response.status);
+            if (response.ok) {
+              console.log('✓ API response is valid (200 OK)');
+            } else {
+              console.warn('⚠ API returned status', response.status);
+            }
+            return response.json();
+          })
+          .then(data => {
+            console.log('✓ API returned valid JSON');
+            if (data.success || data.customers) {
+              console.log('✓ API data is correctly formatted');
+            } else {
+              console.warn('⚠ Unexpected API response format');
+            }
+          })
+          .catch(error => {
+            console.error('✗ API connectivity test failed!');
+            console.error('Error:', error.message);
+            console.error('API URL:', `${API_BASE_URL}/customers.php?action=all`);
+            console.error('This means:');
+            console.error('1. Apache/PHP server might not be running');
+            console.error('2. The API files might not exist at the correct path');
+            console.error('3. There might be a network/firewall issue');
+            console.error('4. MySQL might not be running or the database is not set up');
+          });
+      }
+
+      // Set default home section on load
+      if (document.getElementById('homeSection')) {
+        document.getElementById('homeSection').style.display = 'block';
+      }
+
+      // Initial renders - Load from backend if available
+      if (USE_BACKEND) {
+        console.log('Loading data from backend...');
+        // Test API connectivity before trying to fetch
+        testAPIConnectivity();
+        fetchCustomersFromBackend();
+        fetchOrdersFromBackend();
+        fetchProductsForDropdown();
+      } else {
+        console.log('Using local data...');
+        renderCustomers(customersData);
+        renderOrders(ordersData);
+        updateSalesMetrics();
+      }
+
+      // Console feedback for debugging
+      console.log('Staff1.html initialized successfully');
+      console.log('Backend API URL:', API_BASE_URL);
+      console.log('Using Backend:', USE_BACKEND);
+      console.log('Total Customers:', customersData.length);
+      console.log('Total Orders:', ordersData.length);
+      console.log('System Status: Functional');
+      console.log('Testing modal functionality...');
+      console.log('Add Customer button should call: submitAddCustomer()');
+      console.log('Create Order button should call: submitCreateOrder()');
+      console.log('Open browser DevTools Console (F12) to see debug logs');
+
+      // Mark active link based on current page
+      (function () {
+        const currentFile = location.pathname.split("/").pop() || "Staff1.html";
+        document.querySelectorAll(".menu a").forEach((link) => {
+          if (link.getAttribute("href") === currentFile) {
+            link.classList.add("active");
+          } else {
+            link.classList.remove("active");
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>

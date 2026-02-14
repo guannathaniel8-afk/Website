@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Diagnostic - Padua Hardware CRM</title>
+    <style>
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .check {
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #ddd;
+            background: #f9f9f9;
+            border-radius: 4px;
+        }
+        
+        .check.pass {
+            border-left-color: #10b981;
+            background: #f0fdf4;
+        }
+        
+        .check.fail {
+            border-left-color: #ef4444;
+            background: #fef2f2;
+        }
+        
+        .check.pending {
+            border-left-color: #f59e0b;
+            background: #fffbeb;
+        }
+        
+        .check-icon {
+            display: inline-block;
+            margin-right: 10px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .check-content {
+            display: inline-block;
+            vertical-align: middle;
+        }
+        
+        .check-label {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .check-detail {
+            font-size: 13px;
+            color: #666;
+            margin: 5px 0;
+        }
+        
+        .check.pass .check-detail {
+            color: #10b981;
+        }
+        
+        .check.fail .check-detail {
+            color: #ef4444;
+        }
+        
+        .solution {
+            background: #f0fdf4;
+            border-left: 4px solid #10b981;
+            padding: 12px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        
+        .solution h3 {
+            color: #10b981;
+            margin-top: 0;
+        }
+        
+        .solution ul {
+            margin-left: 20px;
+        }
+        
+        .solution li {
+            margin: 5px 0;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+        
+        button:hover {
+            opacity: 0.9;
+        }
+        
+        .code-block {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #667eea;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Network Diagnostic Tool</h1>
+        <p class="subtitle">Diagnose "Failed to fetch" errors</p>
+        
+        <div id="diagnostics"></div>
+        
+        <button onclick="runDiagnostics()">Run Diagnostics Again</button>
+    </div>
+    
+    <script>
+        const API_BASE_URL = 'http://localhost/Offline/api';
+        
+        async function runDiagnostics() {
+            const container = document.getElementById('diagnostics');
+            container.innerHTML = '';
+            
+            const checks = [
+                {
+                    name: 'API Server Reachability',
+                    test: checkAPIServer
+                },
+                {
+                    name: 'Customers API Endpoint',
+                    test: checkCustomersAPI
+                },
+                {
+                    name: 'Orders API Endpoint',
+                    test: checkOrdersAPI
+                },
+                {
+                    name: 'Products API Endpoint',
+                    test: checkProductsAPI
+                },
+                {
+                    name: 'CORS Headers',
+                    test: checkCORSHeaders
+                },
+                {
+                    name: 'Database Connectivity',
+                    test: checkDatabase
+                }
+            ];
+            
+            for (const check of checks) {
+                const checkDiv = document.createElement('div');
+                checkDiv.className = 'check pending';
+                checkDiv.innerHTML = `
+                    <div class="check-icon"><div class="spinner"></div></div>
+                    <div class="check-content">
+                        <div class="check-label">${check.name}</div>
+                        <div class="check-detail">Testing...</div>
+                    </div>
+                `;
+                container.appendChild(checkDiv);
+                
+                try {
+                    const result = await check.test();
+                    updateCheckResult(checkDiv, result);
+                } catch (error) {
+                    updateCheckResult(checkDiv, {
+                        pass: false,
+                        message: error.message
+                    });
+                }
+            }
+            
+            // Add solutions at the end
+            addSolutions(container);
+        }
+        
+        function updateCheckResult(element, result) {
+            element.className = `check ${result.pass ? 'pass' : 'fail'}`;
+            const icon = result.pass ? '✓' : '✗';
+            element.innerHTML = `
+                <div class="check-icon" style="color: ${result.pass ? '#10b981' : '#ef4444'}">${icon}</div>
+                <div class="check-content">
+                    <div class="check-label">${element.querySelector('.check-label').textContent}</div>
+                    <div class="check-detail">${result.message}</div>
+                </div>
+            `;
+        }
+        
+        async function checkAPIServer() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/customers.php?action=all`, {
+                    method: 'GET'
+                });
+                return {
+                    pass: response.ok,
+                    message: response.ok 
+                        ? `Server is reachable (HTTP ${response.status})`
+                        : `Server returned error (HTTP ${response.status})`
+                };
+            } catch (error) {
+                return {
+                    pass: false,
+                    message: `Cannot reach server: ${error.message}`
+                };
+            }
+        }
+        
+        async function checkCustomersAPI() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/customers.php?action=all`);
+                const data = await response.json();
+                if (data.customers) {
+                    return {
+                        pass: true,
+                        message: `API working (${data.customers.length} customers found)`
+                    };
+                } else {
+                    return {
+                        pass: false,
+                        message: 'API response invalid or no customers'
+                    };
+                }
+            } catch (error) {
+                return {
+                    pass: false,
+                    message: `API error: ${error.message}`
+                };
+            }
+        }
+        
+        async function checkOrdersAPI() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/orders.php?action=all`);
+                const data = await response.json();
+                if (data.orders) {
+                    return {
+                        pass: true,
+                        message: `API working (${data.orders.length} orders found)`
+                    };
+                } else {
+                    return {
+                        pass: false,
+                        message: 'API response invalid or no orders'
+                    };
+                }
+            } catch (error) {
+                return {
+                    pass: false,
+                    message: `API error: ${error.message}`
+                };
+            }
+        }
+        
+        async function checkProductsAPI() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/products.php?action=all`);
+                const data = await response.json();
+                if (data.products) {
+                    return {
+                        pass: true,
+                        message: `API working (${data.products.length} products found)`
+                    };
+                } else {
+                    return {
+                        pass: false,
+                        message: 'API response invalid or no products'
+                    };
+                }
+            } catch (error) {
+                return {
+                    pass: false,
+                    message: `API error: ${error.message}`
+                };
+            }
+        }
+        
+        async function checkCORSHeaders() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/customers.php?action=all`);
+                const corsHeader = response.headers.get('access-control-allow-origin');
+                return {
+                    pass: corsHeader !== null,
+                    message: corsHeader 
+                        ? `CORS enabled (${corsHeader})`
+                        : 'CORS headers not present'
+                };
+            } catch (error) {
+                return {
+                    pass: false,
+                    message: `Cannot check CORS: ${error.message}`
+                };
+            }
+        }
+        
+        async function checkDatabase() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/customers.php?action=all`);
+                const data = await response.json();
+                if (data.error && data.error.includes('Database')) {
+                    return {
+                        pass: false,
+                        message: `Database error: ${data.error}`
+                    };
+                } else if (data.customers) {
+                    return {
+                        pass: true,
+                        message: 'Database is connected and responding'
+                    };
+                } else {
+                    return {
+                        pass: false,
+                        message: 'Database status unknown'
+                    };
+                }
+            } catch (error) {
+                return {
+                    pass: false,
+                    message: `Cannot verify database: ${error.message}`
+                };
+            }
+        }
+        
+        function addSolutions(container) {
+            const solutionsDiv = document.createElement('div');
+            solutionsDiv.innerHTML = `
+                <div class="solution">
+                    <h3>If Tests Fail - Solutions</h3>
+                    <ul>
+                        <li><strong>Apache not running?</strong> Start Apache from XAMPP/WAMP control panel</li>
+                        <li><strong>MySQL not running?</strong> Start MySQL from XAMPP/WAMP control panel</li>
+                        <li><strong>Database not set up?</strong> Import padua_hardware_setup.sql via phpMyAdmin</li>
+                        <li><strong>Wrong API path?</strong> Verify files exist in c:\\Users\\Admin\\Documents\\Offline\\api\\</li>
+                        <li><strong>Firewall blocking?</strong> Check firewall settings for localhost:80</li>
+                        <li><strong>Port in use?</strong> Apache needs port 80 to be available</li>
+                    </ul>
+                </div>
+                
+                <div class="solution">
+                    <h3>Common "Failed to fetch" Causes</h3>
+                    <ul>
+                        <li>🔴 <strong>Apache/PHP not running</strong> - Most common issue</li>
+                        <li>🔴 <strong>MySQL/Database not running</strong> - API depends on database</li>
+                        <li>🔴 <strong>Network firewall</strong> - Blocking localhost requests</li>
+                        <li>🔴 <strong>Port 80 in use</strong> - Another service using Apache's port</li>
+                        <li>🔴 <strong>Incorrect API path</strong> - Check URL in Staff1.html</li>
+                        <li>🔴 <strong>File permissions</strong> - API files not readable</li>
+                    </ul>
+                </div>
+                
+                <div class="solution">
+                    <h3>Quick Fixes to Try</h3>
+                    <ol>
+                        <li>Open XAMPP/WAMP control panel</li>
+                        <li>Click "Start" for Apache (should be green)</li>
+                        <li>Click "Start" for MySQL (should be green)</li>
+                        <li>Wait 3-5 seconds for services to fully start</li>
+                        <li>Refresh Staff1.html (Ctrl+R or Cmd+R)</li>
+                        <li>Check browser console (F12) for error details</li>
+                        <li>Run this diagnostic again</li>
+                    </ol>
+                </div>
+                
+                <div class="solution" style="background: #e0e7ff; border-left-color: #667eea;">
+                    <h3 style="color: #667eea;">Still Need Help?</h3>
+                    <ul>
+                        <li>Open <strong>TESTING_GUIDE.md</strong> for detailed troubleshooting</li>
+                        <li>Check <strong>QUICK_REFERENCE.md</strong> for common issues</li>
+                        <li>Open browser DevTools (F12) and check the Console tab for errors</li>
+                        <li>Look at Network tab to see which requests are failing</li>
+                    </ul>
+                </div>
+            `;
+            container.appendChild(solutionsDiv);
+        }
+        
+        // Run diagnostics on page load
+        window.addEventListener('load', runDiagnostics);
+    </script>
+</body>
+</html>

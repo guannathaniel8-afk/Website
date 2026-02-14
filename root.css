@@ -1,0 +1,589 @@
+/* ============================================
+   ROOT COLOR VARIABLES FOR ALL HTML FILES
+   ============================================ */
+
+:root {
+  /* ===== PRIMARY COLORS ===== */
+  --color-light-blue: #7FD3FF;
+  --color-dark-blue: #002F6C;
+  --color-white: #F8F9FA;
+  /* RGB fallbacks for rgba uses */
+  --color-light-blue-rgb: 127, 211, 255;
+  --color-dark-blue-rgb: 0, 47, 108;
+  --color-white-rgb: 248, 249, 250;
+
+  /* ===== SECONDARY COLORS ===== */
+  --color-dark-blue-shade: #001f47;
+  --color-light-blue-shade: #6fb3db;
+  --color-light-blue-dim: #3a7fb5;
+  --color-blue-accent: #7FD3FF;
+  --color-blue-accent-2: #002F6C;
+
+  /* ===== STATUS COLORS ===== */
+  --color-success: #10B981; /* green for success */
+  --color-warning: #F59E0B; /* amber for warnings */
+  --color-error: #EF4444;   /* red for errors */
+  --color-info: #7FD3FF;    /* info uses new light blue */
+
+  /* ===== NEUTRAL COLORS ===== */
+  --color-gray-light: #F8F9FA;
+  --color-gray-medium: #7FD3FF;
+  --color-gray-dark: #002F6C;
+
+  /* ===== BACKGROUND COLORS ===== */
+  --bg-dark: #002F6C;
+  --bg-darker: #001b3f;
+  --bg-light: #F8F9FA;
+
+  /* ===== GRADIENT PRESETS ===== */
+  --gradient-primary: linear-gradient(
+    90deg,
+    var(--color-light-blue),
+    var(--color-light-blue-shade)
+  );
+  --gradient-border: linear-gradient(
+    140deg,
+    var(--color-light-blue),
+    var(--color-light-blue-shade)
+  );
+  --gradient-sidebar: linear-gradient(
+    var(--color-dark-blue),
+    var(--color-dark-blue-shade)
+  );
+  --gradient-text: linear-gradient(
+    90deg,
+    var(--color-light-blue),
+    var(--color-light-blue-shade)
+  );
+
+  /* ===== SHADOW EFFECTS ===== */
+  --shadow-sm: 0 4px 15px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 0 15px var(--color-light-blue);
+
+  /* ===== BORDER RADIUS ===== */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 15px;
+
+  /* ===== TRANSITIONS ===== */
+  --transition-default: all 0.3s ease;
+  --transition-smooth: all 0.5s ease-in-out;
+  --transition-fast: all 0.15s ease;
+}
+
+/* ============================================
+   APPLY ROOT COLORS TO BASIC ELEMENTS
+   ============================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: url(assets/back.jpg) no-repeat center center/cover fixed;
+  backdrop-filter: brightness(0.2);
+  color: var(--color-white);
+  overflow-x: hidden;
+  font-family: "Poppins", sans-serif;
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+/* Background Colors */
+.bg-light-blue {
+  background-color: var(--color-light-blue);
+}
+
+.bg-dark-blue {
+  background-color: var(--color-dark-blue);
+}
+
+.bg-white {
+  background-color: var(--color-white);
+}
+
+.bg-dark {
+  background-color: var(--bg-dark);
+}
+
+.bg-darker {
+  background-color: var(--bg-darker);
+}
+
+/* Text Colors */
+.text-light-blue {
+  color: var(--color-light-blue);
+}
+
+.text-dark-blue {
+  color: var(--color-dark-blue);
+}
+
+.text-white {
+  color: var(--color-white);
+}
+
+/* Status Colors */
+.text-success {
+  color: var(--color-success);
+}
+
+.text-warning {
+  color: var(--color-warning);
+}
+
+.text-error {
+  color: var(--color-error);
+}
+
+.text-info {
+  color: var(--color-info);
+}
+
+.bg-success {
+  background-color: var(--color-success);
+}
+
+.bg-warning {
+  background-color: var(--color-warning);
+}
+
+.bg-error {
+  background-color: var(--color-error);
+}
+
+.bg-info {
+  background-color: var(--color-info);
+}
+
+/* Border Colors */
+.border-light-blue {
+  border-color: var(--color-light-blue);
+}
+
+.border-dark-blue {
+  border-color: var(--color-dark-blue);
+}
+
+.border-white {
+  border-color: var(--color-white);
+}
+
+/* Gradients */
+.gradient-primary {
+  background: var(--gradient-primary);
+}
+
+.gradient-border {
+  background: var(--gradient-border);
+}
+
+.gradient-sidebar {
+  background: var(--gradient-sidebar);
+}
+
+/* Shadows */
+.shadow-sm {
+  box-shadow: var(--shadow-sm);
+}
+
+.shadow-md {
+  box-shadow: var(--shadow-md);
+}
+
+.shadow-lg {
+  box-shadow: var(--shadow-lg);
+}
+
+/* Border Radius */
+.rounded-sm {
+  border-radius: var(--radius-sm);
+}
+
+.rounded-md {
+  border-radius: var(--radius-md);
+}
+
+.rounded-lg {
+  border-radius: var(--radius-lg);
+}
+
+/* Transitions */
+.transition-default {
+  transition: var(--transition-default);
+}
+
+.transition-smooth {
+  transition: var(--transition-smooth);
+}
+
+.transition-fast {
+  transition: var(--transition-fast);
+}
+
+/* ============================================
+   SIDEBAR STYLING
+   ============================================ */
+
+.sidebar {
+  background:
+    linear-gradient(var(--color-dark-blue), var(--color-dark-blue-shade))
+      padding-box,
+    linear-gradient(
+        140deg,
+        var(--color-light-blue),
+        var(--color-light-blue-shade)
+      )
+      border-box;
+  background-clip: padding-box, border-box;
+  border: 5px solid transparent;
+}
+
+.brand h4 {
+  background: var(--gradient-text);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* ============================================
+   BUTTON STYLING
+   ============================================ */
+
+.btn-primary {
+  background: var(--color-light-blue);
+  color: var(--color-white);
+  border: none;
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: var(--transition-default);
+}
+
+.btn-primary:hover {
+  background: var(--color-light-blue-shade);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-secondary {
+  background: var(--color-dark-blue);
+  color: var(--color-white);
+  border: 1px solid var(--color-light-blue);
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: var(--transition-default);
+}
+
+.btn-secondary:hover {
+  background: var(--color-light-blue);
+  color: var(--color-dark-blue);
+}
+
+/* ============================================
+   CARD STYLING
+   ============================================ */
+
+.card {
+  background: rgba(0, 61, 130, 0.1);
+  border: 1px solid var(--color-light-blue);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  backdrop-filter: blur(10px);
+  transition: var(--transition-default);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-light-blue-shade);
+}
+
+/* ============================================
+   INPUT STYLING
+   ============================================ */
+
+input,
+textarea,
+select {
+  background: rgba(0, 61, 130, 0.1);
+  border: 1px solid var(--color-light-blue);
+  color: var(--color-white);
+  padding: 10px 15px;
+  border-radius: var(--radius-md);
+  font-family: "Poppins", sans-serif;
+  transition: var(--transition-default);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--color-light-blue-shade);
+  box-shadow: 0 0 10px rgba(77, 166, 214, 0.3);
+  background: rgba(0, 61, 130, 0.2);
+}
+
+input::placeholder {
+  color: var(--color-gray-light);
+}
+
+/* ============================================
+   TABLE STYLING
+   ============================================ */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th {
+  background: linear-gradient(
+    90deg,
+    var(--color-dark-blue),
+    var(--color-dark-blue-shade)
+  );
+  color: var(--color-light-blue);
+  padding: 15px;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 2px solid var(--color-light-blue);
+}
+
+table td {
+  padding: 15px;
+  border-bottom: 1px solid rgba(77, 166, 214, 0.1);
+  color: var(--color-white);
+}
+
+table tr:hover {
+  background: rgba(77, 166, 214, 0.05);
+}
+
+/* ============================================
+   BADGE STYLING
+   ============================================ */
+
+.badge {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge-success {
+  background: rgba(16, 185, 129, 0.2);
+  color: var(--color-success);
+  border: 1px solid var(--color-success);
+}
+
+.badge-warning {
+  background: rgba(245, 158, 11, 0.2);
+  color: var(--color-warning);
+  border: 1px solid var(--color-warning);
+}
+
+.badge-error {
+  background: rgba(239, 68, 68, 0.2);
+  color: var(--color-error);
+  border: 1px solid var(--color-error);
+}
+
+.badge-info {
+  background: rgba(59, 130, 246, 0.2);
+  color: var(--color-info);
+  border: 1px solid var(--color-info);
+}
+
+/* ============================================
+   RESPONSIVE HELPERS AND MEDIA QUERIES
+   Makes layouts, tables, images, and panels responsive
+   ============================================ */
+
+/* Responsive utilities */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+img,
+video,
+iframe,
+embed,
+object {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.table-fixed {
+  width: 100%;
+  table-layout: fixed;
+  word-wrap: break-word;
+}
+
+/* Utility visibility classes */
+.hide-on-mobile {
+  display: none;
+}
+.show-on-mobile {
+  display: none;
+}
+
+/* ---------------------------------------- */
+/* TABLETS / SMALL DESKTOPS (max 992px) */
+/* ---------------------------------------- */
+@media (max-width: 992px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    padding: 20px;
+    order: -1; /* put sidebar above main */
+  }
+
+  .main {
+    padding: 20px;
+  }
+
+  .menu {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .topbar,
+  .panel,
+  .card {
+    padding: 15px;
+  }
+
+  .stat {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .menu a {
+    padding: 10px 12px;
+  }
+
+  /* make tables scrollable on small screens */
+  table {
+    font-size: 14px;
+  }
+
+  .table-responsive {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* show/hide helpers */
+  .hide-on-mobile {
+    display: none !important;
+  }
+  .show-on-mobile {
+    display: inline !important;
+  }
+}
+
+/* ---------------------------------------- */
+/* PHONES (max 600px) */
+/* ---------------------------------------- */
+@media (max-width: 600px) {
+  .sidebar {
+    padding: 15px;
+  }
+
+  .brand h4 {
+    font-size: 16px;
+  }
+  .stat h3 {
+    font-size: 18px;
+  }
+
+  .menu a {
+    padding: 8px 10px;
+    font-size: 14px;
+  }
+
+  .topbar {
+    padding: 12px;
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+  }
+
+  .icons i {
+    padding: 8px;
+  }
+  .panel {
+    padding: 18px;
+  }
+
+  /* mobile visibility helpers */
+  .hide-on-mobile {
+    display: none !important;
+  }
+  .show-on-mobile {
+    display: inline !important;
+  }
+
+  /* Make buttons and inputs stack full-width */
+  .btn {
+    width: 100%;
+  }
+  input,
+  textarea,
+  select {
+    width: 100%;
+  }
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 1024px) {
+  :root {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    font-size: 13px;
+  }
+
+  .sidebar {
+    width: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    font-size: 12px;
+  }
+
+  .sidebar {
+    width: 100%;
+    max-width: 250px;
+  }
+
+  table {
+    font-size: 12px;
+  }
+
+  table th,
+  table td {
+    padding: 10px;
+  }
+}
